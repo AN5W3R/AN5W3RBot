@@ -87,6 +87,7 @@ public class Client {
         }
         params.put("message",resMsg);
         paramsRequest.setParams(params);
+        logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
 
         String msg = JSONObject.toJSONString(paramsRequest);//将请求转换为json
         instance.session.getAsyncRemote().sendText(msg);//发出请求
