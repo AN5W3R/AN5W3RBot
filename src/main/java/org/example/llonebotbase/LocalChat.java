@@ -24,37 +24,45 @@ import java.util.Random;
 
 public class LocalChat {
     private static final Logger logger = LoggerFactory.getLogger(LocalChat.class);
-    private static final Map<String, String[]> jsonMap = getJsonMap();
-    public static String ChatByMsg(String in) throws UnsupportedEncodingException {
+    private static final Map<String, String[]> jsonMap;
+
+    static {
+        try {
+            jsonMap = getJsonMap();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String ChatByMsg(String in) throws UnsupportedEncodingException {//选择回复的文本
         for (String s : jsonMap.keySet()) {
             if (in.contains(s)) {
-                Object o = jsonMap.get(s);
-                if (o.getClass().isArray()) {
-                    String[] stringO = (String[]) o;
-                    Random r = new Random();//util.Random
-                    int index =r.nextInt(stringO.length);
-                    return stringO[index];
-                } else {
-                    return o.toString();
-                }
+                String[] value = jsonMap.get(s);
+                Random r = new Random();//util.Random
+                int index =r.nextInt(value.length);
+                return value[index];
             }
         }
 
-//        if("你好".equals(in)){
-//            return "你也好";
-//        }
-//        if(in.contains("说话")){
-//            return "你好";
-//        }
-//        if (in.contains("@2044284028")){
-//            return "不在";
-//        }
-//        if(in.contains("小莫")){
-//            return "不准压力人,不准压力人,不准压力人";
-//        }
-        String encodedString = URLEncoder.encode(in, StandardCharsets.UTF_8.toString());
-        return "test";
-//        return AiOne(encodedString);
+        String encodedString = URLEncoder.encode(in, StandardCharsets.UTF_8);
+//        return "test";
+        return AiOne(encodedString);
+    }
+
+    //在json文件中获取所有回复
+    public static Map<String, String[]> getJsonMap() throws IOException {
+        String jsonStr = null;
+        // 创建一个 Path 对象，表示要读取的文件路径
+        Path path = Paths.get("src/main/resources/Chat.json");
+
+        // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
+        byte[] bytes = Files.readAllBytes(path);
+        jsonStr = new String(bytes, Charset.forName("UTF-8"));
+
+        Map<String, String[]> resultMap = JSON.parseObject(jsonStr, new TypeReference<Map<String, String[]>>() {}.getType());
+
+        return resultMap;
+
     }
 
     //    该函数用于调用qingyunke生成聊天的回复
@@ -75,26 +83,4 @@ public class LocalChat {
         }
     }
 
-    public static Map<String, String[]> getJsonMap(){
-        String jsonStr = null;
-        // 创建一个 Path 对象，表示要读取的文件路径
-        Path path = Paths.get("src/main/resources/Chat.json");
-        try {
-            // 使用 Files 类的 readAllBytes 方法，将文件的所有字节读取到一个 byte 数组中
-            byte[] bytes = Files.readAllBytes(path);
-            // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
-            jsonStr = new String(bytes, Charset.forName("UTF-8"));
-
-        } catch (IOException e) {
-            // 处理异常
-            e.printStackTrace();
-        }
-        Map<String, String[]> resultMap = JSON.parseObject(jsonStr, new TypeReference<Map<String, String[]>>() {}.getType());
-
-        for (Map.Entry<String, String[]> entry : resultMap.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
-        return resultMap;
-
-    }
 }

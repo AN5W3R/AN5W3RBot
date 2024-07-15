@@ -55,13 +55,7 @@ public class Client {
     //
     @OnMessage
     public void onMessage(String message) throws UnsupportedEncodingException {//message对象正在以json字符串的形式传输,这里要重构,让它以对象形式传输
-        System.out.println("\n"+message);
-//        if (message.contains("\"request_type\":\"friend\"")) {//信息类型为好友请求
-//            Friend parseObject = JSONObject.parseObject(message, Friend.class);//JSON转换为对象
-//
-//            sendFriend(parseObject);
-//        }
-//
+//        System.out.println("\n"+message);
         if (message.contains("\"post_type\":\"message\"")) {//信息类型为消息
             Message parseObject = JSONObject.parseObject(message, Message.class);//JSON转换为对象
 
@@ -71,39 +65,31 @@ public class Client {
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
                 if(parseObject.getRawMessage().contains("[CQ:at,qq=3363590760]")){//被@的情况message
                     sendGroupMsg(parseObject);
-                } //else if(parseObject.getMessage().contains("[CQ:at,qq=2044284028]")) {
-//                    parseObject.setMessage("@2044284028");
-//                    sendGroupMsg(parseObject);
-//                } else if("2468794766".equals(parseObject.getUserId())){
-//                    parseObject.setMessage("小莫");
-//                    sendGroupMsg(parseObject);
-//                }
+                }
             }
         }
-
     }
-//
     /**
      * 好友消息
      */
     public synchronized static void sendPrivateMsg(Message parseObject) throws UnsupportedEncodingException {
         String message = parseObject.getRawMessage();
         logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
+
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("send_private_msg");
         Map<String, Object> params = new HashMap<>();
         params.put("user_id", parseObject.getUserId());
-//        String ai = LocalChat.AiOne(message);
 
-        String ai = LocalChat.ChatByMsg(message);
-        if (ai == null) {
-          ai = "宝，回复失败!重新试试把!";
+        String resMsg = LocalChat.ChatByMsg(message);
+        if (resMsg == null) {
+            resMsg = "出了点小问题...";
         }
-        params.put("message",ai);
+        params.put("message",resMsg);
         paramsRequest.setParams(params);
 
-        String msg = JSONObject.toJSONString(paramsRequest);//发出信息
-        instance.session.getAsyncRemote().sendText(msg);
+        String msg = JSONObject.toJSONString(paramsRequest);//将请求转换为json
+        instance.session.getAsyncRemote().sendText(msg);//发出请求
     }
 
     /**
@@ -111,19 +97,19 @@ public class Client {
      */
     public synchronized static void sendGroupMsg( Message parseObject) throws UnsupportedEncodingException {
         String message = parseObject.getRawMessage();
-        logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
-        Request<Object> paramsRequest = new Request<>();
-        paramsRequest.setAction("send_group_msg");
+        logger.info("收到群" + parseObject.getGroupId() + "的消息：" + message);
+
+        Request<Object> paramsRequest = new Request<>();//用于发送请求的对象
+        paramsRequest.setAction("send_group_msg");//设置发送群消息
         Map<String, Object> params = new HashMap<>();
-        params.put("group_id", parseObject.getGroupId());
-//        String ai = AiOne(message);
+        params.put("group_id", parseObject.getGroupId());//设置要发送的群
 
-        String ai = LocalChat.ChatByMsg(message);
+        String resMsg = LocalChat.ChatByMsg(message);//
 
-        if (ai == null) {
-            ai = "宝，回复失败!重新试试把!";
+        if (resMsg == null) {
+            resMsg = "出了点小问题...";
         }
-        params.put("message",ai);
+        params.put("message",resMsg);
         paramsRequest.setParams(params);
 
         String msg = JSONObject.toJSONString(paramsRequest);
