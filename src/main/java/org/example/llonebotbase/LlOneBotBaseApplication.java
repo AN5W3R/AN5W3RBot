@@ -26,7 +26,7 @@ public class LlOneBotBaseApplication implements CommandLineRunner {
             @Override
             public void run() {
                 if (!Client.isOpen || Client.instance == null) {
-                    Client.connect("ws://127.0.0.1:9090");
+                    Client.connect("ws://127.0.0.1:6700");
                     logger.error("正在断线重连！");
                 }
             }

@@ -55,7 +55,7 @@ public class Client {
     //
     @OnMessage
     public void onMessage(String message) throws UnsupportedEncodingException {//message对象正在以json字符串的形式传输,这里要重构,让它以对象形式传输
-//        System.out.println("\n"+message);
+        System.out.println("\n"+message);
         if (message.contains("\"post_type\":\"message\"")) {//信息类型为消息
             Message parseObject = JSONObject.parseObject(message, Message.class);//JSON转换为对象
 
@@ -63,7 +63,7 @@ public class Client {
                 sendPrivateMsg(parseObject);
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
-                if(parseObject.getRawMessage().contains("[CQ:at,qq=3363590760]")){//被@的情况message
+                if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@的情况message
                     sendGroupMsg(parseObject);
                 }
             }
