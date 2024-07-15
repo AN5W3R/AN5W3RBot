@@ -74,7 +74,7 @@ public class Client {
                 } //else if(parseObject.getMessage().contains("[CQ:at,qq=2044284028]")) {
 //                    parseObject.setMessage("@2044284028");
 //                    sendGroupMsg(parseObject);
-//                } else if("2468794766".equals(parseObject.getUserId())){//群聊中某人说话message.contains("\"user_id\":2468794766")
+//                } else if("2468794766".equals(parseObject.getUserId())){
 //                    parseObject.setMessage("小莫");
 //                    sendGroupMsg(parseObject);
 //                }
@@ -82,27 +82,6 @@ public class Client {
         }
 
     }
-//
-//    /**
-//     * 好友请求
-//     */
-//    private synchronized void sendFriend(Friend parseObject) {
-//        logger.info("收到好友请求：" + parseObject.getUser_id() + ",验证消息：" + parseObject.getComment());
-//        Request<Object> paramsRequest = new Request<>();
-//        paramsRequest.setAction("set_friend_add_request");
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("flag", parseObject.getFlag());
-//        if (parseObject.getComment().contains("哭来兮苦")) {
-//            params.put("approve", true);
-//            logger.info("已同意好友请求：" + parseObject.getUser_id());
-//        } else {
-//            params.put("approve", false);
-//            logger.info("已拒绝好友请求：" + parseObject.getUser_id());
-//        }
-//        paramsRequest.setParams(params);
-//        instance.session.getAsyncRemote().sendText(JSONObject.toJSONString(paramsRequest));
-//
-//    }
 //
     /**
      * 好友消息
