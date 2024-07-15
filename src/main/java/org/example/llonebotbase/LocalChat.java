@@ -1,6 +1,8 @@
 package org.example.llonebotbase;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -22,12 +24,12 @@ import java.util.Random;
 
 public class LocalChat {
     private static final Logger logger = LoggerFactory.getLogger(LocalChat.class);
-    private static final Map<String,Object> jsonMap = getJsonMap();
+    private static final Map<String, String[]> jsonMap = getJsonMap();
     public static String ChatByMsg(String in) throws UnsupportedEncodingException {
         for (String s : jsonMap.keySet()) {
             if (in.contains(s)) {
                 Object o = jsonMap.get(s);
-                if (o.getClass().isArray()) {//有问题
+                if (o.getClass().isArray()) {
                     String[] stringO = (String[]) o;
                     Random r = new Random();//util.Random
                     int index =r.nextInt(stringO.length);
@@ -73,7 +75,7 @@ public class LocalChat {
         }
     }
 
-    public static Map<String,Object> getJsonMap(){
+    public static Map<String, String[]> getJsonMap(){
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
         Path path = Paths.get("src/main/resources/Chat.json");
@@ -87,11 +89,12 @@ public class LocalChat {
             // 处理异常
             e.printStackTrace();
         }
+        Map<String, String[]> resultMap = JSON.parseObject(jsonStr, new TypeReference<Map<String, String[]>>() {}.getType());
 
-        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-        return jsonObject;
-//        for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
-//            System.out.println(entry.getKey() + " " + entry.getValue());
-//        }
+        for (Map.Entry<String, String[]> entry : resultMap.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+        return resultMap;
+
     }
 }
