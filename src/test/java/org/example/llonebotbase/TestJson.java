@@ -19,7 +19,7 @@ public class TestJson {
     public void testJson(){
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
-        Path path = Paths.get("src/main/resources/Chat.json");
+        Path path = Paths.get("src/main/resources/AtMessage.json");
         try {
             // 使用 Files 类的 readAllBytes 方法，将文件的所有字节读取到一个 byte 数组中
             byte[] bytes = Files.readAllBytes(path);

@@ -1,7 +1,6 @@
 package org.example.llonebotbase;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -53,7 +52,7 @@ public class LocalChat {
     public static Map<String, String[]> getJsonMap() throws IOException {
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
-        Path path = Paths.get("src/main/resources/Chat.json");
+        Path path = Paths.get("AtMessage.json");
 
         // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
         byte[] bytes = Files.readAllBytes(path);
