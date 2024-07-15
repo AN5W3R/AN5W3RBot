@@ -1,6 +1,8 @@
 package org.example.llonebotbase;
 
 import com.alibaba.fastjson.JSONObject;
+import org.example.llonebotbase.entity.MsgItem;
+import org.example.llonebotbase.entity.Request;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -11,6 +13,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -35,5 +39,29 @@ public class TestJson {
         for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
             System.out.println(entry.getKey() + " " + entry.getValue());
         }
+    }
+
+    @Test
+    public void testJson2(){
+        Request<Object> paramsRequest = new Request<>();//用于发送请求的对象
+        paramsRequest.setAction("send_group_msg");//设置发送群消息
+        Map<String, Object> params = new HashMap<>();
+        params.put("group_id", 123456);//设置要发送的群
+
+        ArrayList<MsgItem> msgList = new ArrayList<>();
+        MsgItem item = new MsgItem();
+        item.setType("text");
+        Map<String, String> data  = new HashMap<>();
+        data.put("text", "333");
+
+        item.setData(data);
+        msgList.add(item);
+        params.put("message",msgList);
+
+
+        paramsRequest.setParams(params);
+
+        String msg = JSONObject.toJSONString(paramsRequest);
+        System.out.println(msg);
     }
 }

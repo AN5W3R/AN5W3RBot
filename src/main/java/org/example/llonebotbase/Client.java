@@ -77,9 +77,10 @@ public class Client {
         logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
 
         Request<Object> paramsRequest = new Request<>();
-        paramsRequest.setAction("send_private_msg");
+        paramsRequest.setAction("send_msg");
         Map<String, Object> params = new HashMap<>();
         params.put("user_id", parseObject.getUserId());
+        params.put("detail_type","private");
 
         String resMsg = LocalChat.ChatByMsg(message);
         if (resMsg == null) {
@@ -101,10 +102,10 @@ public class Client {
         logger.info("收到群" + parseObject.getGroupId() + "的消息：" + message);
 
         Request<Object> paramsRequest = new Request<>();//用于发送请求的对象
-        paramsRequest.setAction("send_group_msg");//设置发送群消息
+        paramsRequest.setAction("send_msg");//设置发送消息
         Map<String, Object> params = new HashMap<>();
         params.put("group_id", parseObject.getGroupId());//设置要发送的群
-
+        params.put("detail_type","group");
         String resMsg = LocalChat.ChatByMsg(message);//
 
         if (resMsg == null) {
