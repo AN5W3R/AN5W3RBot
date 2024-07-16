@@ -55,6 +55,7 @@ public class Client {
         if (message.contains("\"post_type\":\"message\"")) {//处理message信息
             Message parseObject = JSONObject.parseObject(message, Message.class);//JSON转换为对象
 
+            //TODO 不能直接sendMsg,要添加判断适应更多情况
             if("private".equals(parseObject.getMessageType())){//私聊信息
                 MsgAction.sendMsg(parseObject, parseObject.getMessageType());
             }

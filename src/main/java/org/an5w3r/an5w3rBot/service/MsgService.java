@@ -6,7 +6,7 @@ import org.an5w3r.an5w3rBot.entity.MsgItem;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MsgService {
+public class MsgService {//这里写具体如何回复
     public static ArrayList<MsgItem> msgListDefault(String message) throws IOException {
         ArrayList<MsgItem> msgList = new ArrayList<>();
         MsgItem item = new MsgItem("text","text", MsgDao.getTextByMsg(message));

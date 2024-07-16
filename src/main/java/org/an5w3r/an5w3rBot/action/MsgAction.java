@@ -17,15 +17,11 @@ import java.util.Map;
 public class MsgAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
 
-    /**
-     * 消息
-     */
     public synchronized static void sendMsg(Message parseObject, String detailType) throws IOException {
         String message = parseObject.getRawMessage();
 
         Map<String, Object> params = new HashMap<>();
         params.put("detail_type",detailType);
-
         if("private".equals(detailType)){
             logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
             params.put("user_id", parseObject.getUserId());
@@ -36,8 +32,8 @@ public class MsgAction {
             return;
         }
 
-        ArrayList<MsgItem> ResMessage = MsgService.msgListDefault(message);
-        params.put("message",ResMessage);
+        ArrayList<MsgItem> RetMessage = MsgService.msgListDefault(message);//这里要使用不同的方法来决定不同的发生内容
+        params.put("message",RetMessage);
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("send_msg");
         paramsRequest.setParams(params);
