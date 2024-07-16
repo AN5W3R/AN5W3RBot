@@ -74,7 +74,7 @@ public class Client {
     /**
      * 好友消息
      */
-    //TODO 私聊和群聊合并一个函数
+    //TODO 私聊和群聊合并一个函数 会话层
     public synchronized static void sendPrivateMsg(Message parseObject) throws UnsupportedEncodingException {
         String message = parseObject.getRawMessage();
         logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
