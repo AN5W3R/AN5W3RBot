@@ -2,18 +2,13 @@ package org.an5w3r.an5w3rBot;
 
 import com.alibaba.fastjson.JSONObject;
 import jakarta.websocket.*;
-import org.an5w3r.an5w3rBot.dao.MsgDao;
-import org.an5w3r.an5w3rBot.entity.MsgItem;
+import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.entity.Message;
-import org.an5w3r.an5w3rBot.entity.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 消息监听
@@ -21,10 +16,8 @@ import java.util.Map;
 @ClientEndpoint
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
-    private Session session;
+    public Session session;
     public static Client instance;
-    public static boolean isOpen = false;
-
  
     private Client(String url) {
         try {
@@ -41,13 +34,13 @@ public class Client {
  
     @OnOpen
     public void onOpen(Session session) {
-        isOpen = true;
+        Status.isOpen = true;
         logger.info("连接成功！");
     }
  
     @OnClose
     public void onClose(Session session) {
-        isOpen = false;
+        Status.isOpen = false;
         logger.info("连接关闭！");
     }
  
@@ -63,50 +56,15 @@ public class Client {
             Message parseObject = JSONObject.parseObject(message, Message.class);//JSON转换为对象
 
             if("private".equals(parseObject.getMessageType())){//私聊信息
-                sendMsg(parseObject, parseObject.getMessageType());
+                MsgAction.sendMsg(parseObject, parseObject.getMessageType());
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
                 if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@的情况message
-                    sendMsg(parseObject, parseObject.getMessageType());
+                    MsgAction.sendMsg(parseObject, parseObject.getMessageType());
                 }
             }
         }
     }
-    /**
-     * 消息
-     */
-    public synchronized static void sendMsg(Message parseObject,String detailType) throws IOException {
-        String message = parseObject.getRawMessage();
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("detail_type",detailType);
-
-        if("private".equals(detailType)){
-            logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
-            params.put("user_id", parseObject.getUserId());
-        } else if("group".equals(detailType)){
-            logger.info("收到群" + parseObject.getGroupId() + "的消息：" + message);
-            params.put("group_id", parseObject.getGroupId());
-        } else {
-            return;
-        }
-
-//TODO        获取msgList的逻辑可以写在service
-        ArrayList<MsgItem> msgList = new ArrayList<>();
-        MsgItem item = new MsgItem("text","text", MsgDao.getTextByMsg(message));
-        msgList.add(item);
-//        MsgItem item1 = new MsgItem("image","file","https://gchat.qpic.cn/gchatpic_new/1542338612/758025242-3108042462-E04E0D37BB15FF418729C4AE9118A180/0?term=255&is_origin=0");
-//        msgList.add(item1);
-
-        params.put("message",msgList);
-        Request<Object> paramsRequest = new Request<>();
-        paramsRequest.setAction("send_msg");
-        paramsRequest.setParams(params);
-
-        String msg = JSONObject.toJSONString(paramsRequest);//将请求转换为json
-        instance.session.getAsyncRemote().sendText(msg);//发出请求
-    }
-
 
 }
 
