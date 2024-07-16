@@ -2,11 +2,10 @@ package org.an5w3r.an5w3rBot.action;
 
 import com.alibaba.fastjson.JSONObject;
 import org.an5w3r.an5w3rBot.Client;
-import org.an5w3r.an5w3rBot.dao.MsgDao;
 import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.entity.Request;
-import org.an5w3r.an5w3rBot.service.MessageService;
+import org.an5w3r.an5w3rBot.service.MsgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,7 @@ public class MsgAction {
             return;
         }
 
-        ArrayList<MsgItem> ResMessage = MessageService.msgListDefault(message);
+        ArrayList<MsgItem> ResMessage = MsgService.msgListDefault(message);
         params.put("message",ResMessage);
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("send_msg");
