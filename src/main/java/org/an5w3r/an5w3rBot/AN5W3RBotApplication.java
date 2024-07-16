@@ -10,11 +10,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @SpringBootApplication
-public class LlOneBotBaseApplication implements CommandLineRunner {
+public class AN5W3RBotApplication implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(SpringApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(LlOneBotBaseApplication.class, args);
+        SpringApplication.run(AN5W3RBotApplication.class, args);
     }
 
     @Override
