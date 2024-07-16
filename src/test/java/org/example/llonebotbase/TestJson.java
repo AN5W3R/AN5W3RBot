@@ -19,6 +19,7 @@ import java.util.Map;
 
 
 public class TestJson {
+
     @Test
     public void testJson(){
         String jsonStr = null;
@@ -62,6 +63,8 @@ public class TestJson {
         paramsRequest.setParams(params);
 
         String msg = JSONObject.toJSONString(paramsRequest);
+
         System.out.println(msg);
+
     }
 }

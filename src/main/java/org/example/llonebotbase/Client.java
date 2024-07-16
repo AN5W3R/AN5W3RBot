@@ -3,12 +3,14 @@ package org.example.llonebotbase;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.websocket.*;
 import org.example.llonebotbase.entity.Message;
+import org.example.llonebotbase.entity.MsgItem;
 import org.example.llonebotbase.entity.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -106,16 +108,35 @@ public class Client {
         Map<String, Object> params = new HashMap<>();
         params.put("group_id", parseObject.getGroupId());//设置要发送的群
         params.put("detail_type","group");
-        String resMsg = LocalChat.ChatByMsg(message);//
 
+        String resMsg = LocalChat.ChatByMsg(message);//
         if (resMsg == null) {
             resMsg = "出了点小问题...";
         }
-        params.put("message",resMsg);
+//        params.put("message",resMsg);//应该放进data
+        ArrayList<MsgItem> msgList = new ArrayList<>();
+
+        MsgItem item = new MsgItem();
+        item.setType("text");
+        Map<String, String> data  = new HashMap<>();
+        data.put("text",resMsg);
+        item.setData(data);
+        msgList.add(item);
+
+        MsgItem item1 = new MsgItem();
+        item1.setType("image");
+        Map<String, String> data1  = new HashMap<>();
+        data1.put("file","https://gchat.qpic.cn/gchatpic_new/1542338612/758025242-3108042462-E04E0D37BB15FF418729C4AE9118A180/0?term=255&is_origin=0");
+        item1.setData(data1);
+        msgList.add(item1);
+
+        params.put("message",msgList);
         paramsRequest.setParams(params);
 
         String msg = JSONObject.toJSONString(paramsRequest);
+        System.out.println(msg);
         instance.session.getAsyncRemote().sendText(msg);
     }
 
 }
+
