@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import jakarta.websocket.*;
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.entity.Message;
+import org.an5w3r.an5w3rBot.service.MsgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,11 +58,16 @@ public class Client {
 
             //TODO 不能直接sendMsg,要添加判断适应更多情况
             if("private".equals(parseObject.getMessageType())){//私聊信息
-                MsgAction.sendMsg(parseObject, parseObject.getMessageType());
+                MsgAction.sendMsg(parseObject, parseObject.getMessageType(), MsgService.msgOneText(message));
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
                 if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@的情况message
-                    MsgAction.sendMsg(parseObject, parseObject.getMessageType());
+                    if(parseObject.getRawMessage().equals("[CQ:at,qq="+parseObject.getSelfId()+"] #涩图")){
+                        MsgAction.sendMsg(parseObject, parseObject.getMessageType(), MsgService.msgOneRandomImage("Random"));
+                    }else {
+                        MsgAction.sendMsg(parseObject, parseObject.getMessageType(), MsgService.msgOneText(message));
+                    }
+
                 }
             }
         }
