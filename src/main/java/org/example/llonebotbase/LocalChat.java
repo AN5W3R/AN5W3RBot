@@ -49,6 +49,7 @@ public class LocalChat {
     }
 
     //在json文件中获取所有回复
+    //TODO 添加图片.json
     public static Map<String, String[]> getJsonMap() throws IOException {
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
@@ -65,6 +66,7 @@ public class LocalChat {
     }
 
     //    该函数用于调用qingyunke生成聊天的回复
+    //TODO 更换API
     public static String AiOne(String sendMsg) {
         try {
             HttpGet httpGet = new HttpGet("http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + sendMsg);

@@ -74,6 +74,7 @@ public class Client {
     /**
      * 好友消息
      */
+    //TODO 私聊和群聊合并一个函数
     public synchronized static void sendPrivateMsg(Message parseObject) throws UnsupportedEncodingException {
         String message = parseObject.getRawMessage();
         logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
@@ -109,18 +110,21 @@ public class Client {
         params.put("group_id", parseObject.getGroupId());//设置要发送的群
         params.put("detail_type","group");
 
+
+//        params.put("message",resMsg);//应该放进data
+        ArrayList<MsgItem> msgList = new ArrayList<>();
+
+//TODO        这段可以封装返回MsgItem的函数，image和text等用同一个函数，做成构造函数?
+        MsgItem item = new MsgItem();
+        item.setType("text");
+        Map<String, String> data  = new HashMap<>();
         String resMsg = LocalChat.ChatByMsg(message);//
         if (resMsg == null) {
             resMsg = "出了点小问题...";
         }
-//        params.put("message",resMsg);//应该放进data
-        ArrayList<MsgItem> msgList = new ArrayList<>();
-
-        MsgItem item = new MsgItem();
-        item.setType("text");
-        Map<String, String> data  = new HashMap<>();
         data.put("text",resMsg);
         item.setData(data);
+
         msgList.add(item);
 
         MsgItem item1 = new MsgItem();
