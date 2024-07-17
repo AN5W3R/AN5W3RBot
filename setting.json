@@ -1,4 +1,5 @@
 {
   "AtMessageSrc": "D:\\QQBOT\\AtMessage.json",
-  "ImageSrc": "D:\\QQBOT\\Images"
+  "ImageSrc": "D:\\QQBOT\\Images",
+  "port": "6700"
 }

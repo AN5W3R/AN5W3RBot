@@ -13,7 +13,6 @@ import java.util.Random;
 public class MsgDao {
     //获取回复的文本
     public static String getTextByMsg(String in) throws IOException {
-//        Map<String, String[]> TextJsonMap =  MsgUtil.getTextMsgMap();
         Map<String, String[]> TextJsonMap = JSONUtil.getTextMsgMap();
         for (String s : TextJsonMap.keySet()) {
             if (in.contains(s)) {
@@ -28,16 +27,8 @@ public class MsgDao {
         return MsgUtil.getAiMsg(encodedString);
     }
 
-    public static String getImageByMsg(String in) throws IOException {
-//        Map<String, String[]> TextJsonMap =  MsgUtil.getTextMsgMap();
-//        for (String s : TextJsonMap.keySet()) {
-//            if (in.contains(s)) {
-//                String[] value = TextJsonMap.get(s);
-//                Random r = new Random();//util.Random
-//                int index =r.nextInt(value.length);
-//                return value[index];
-//            }
-//        }
+    public static String getImageByMsg(String in) throws IOException {//暂时没写逻辑,发送随机图
+
         return ImageUtil.getRandomImageLocal();
     }
 }

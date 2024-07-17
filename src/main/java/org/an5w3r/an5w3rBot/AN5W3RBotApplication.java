@@ -1,11 +1,13 @@
 package org.an5w3r.an5w3rBot;
 
+import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,14 +21,22 @@ public class AN5W3RBotApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Client.connect("ws://127.0.0.1:6700");
+        try {
+            Client.connect("ws://127.0.0.1:"+ JSONUtil.getSettingMap().get("port"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         // 断线重连
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (!Setting.isOpen || Client.instance == null) {
-                    Client.connect("ws://127.0.0.1:6700");
+                    try {
+                        Client.connect("ws://127.0.0.1:"+ JSONUtil.getSettingMap().get("port"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     logger.error("正在断线重连！");
                 }
             }
