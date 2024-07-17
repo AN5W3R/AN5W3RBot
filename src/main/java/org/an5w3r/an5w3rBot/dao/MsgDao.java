@@ -28,7 +28,13 @@ public class MsgDao {
     }
 
     public static String getImageByMsg(String in) throws IOException {//暂时没写逻辑,发送随机图
-
-        return ImageUtil.getRandomImageLocal();
+        String src = null;
+        if ("涩图".equals(in)){
+            src = JSONUtil.getSettingMap().get("SexImageSrc");
+        } else if ("美图".equals(in)){
+            src = JSONUtil.getSettingMap().get("ImageSrc");
+        }
+        System.out.println(src);
+        return ImageUtil.getRandomImageLocal(src);
     }
 }

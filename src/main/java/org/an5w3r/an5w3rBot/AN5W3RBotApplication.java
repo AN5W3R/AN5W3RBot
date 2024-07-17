@@ -1,5 +1,6 @@
 package org.an5w3r.an5w3rBot;
 
+import lombok.SneakyThrows;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,30 +15,35 @@ import java.util.TimerTask;
 @SpringBootApplication
 public class AN5W3RBotApplication implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(SpringApplication.class);
+    public static final String URL;
+
+    static {
+        try {
+            URL = "ws://127.0.0.1:"+ JSONUtil.getSettingMap().get("port");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(AN5W3RBotApplication.class, args);
     }
 
+    @SneakyThrows
     @Override
     public void run(String... args) {
-        try {
-            Client.connect("ws://127.0.0.1:"+ JSONUtil.getSettingMap().get("port"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        logger.info("正在连接"+URL);
+        Client.connect(URL);
+
         // 断线重连
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
+            @SneakyThrows
             @Override
             public void run() {
                 if (!Setting.isOpen || Client.instance == null) {
-                    try {
-                        Client.connect("ws://127.0.0.1:"+ JSONUtil.getSettingMap().get("port"));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    logger.error("正在断线重连！");
+                    logger.error("正在断线重连！"+URL);
+                    Client.connect(URL);
                 }
             }
         }, 1000, 5000);

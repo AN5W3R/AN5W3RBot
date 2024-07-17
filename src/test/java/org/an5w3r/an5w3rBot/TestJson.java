@@ -1,6 +1,7 @@
 package org.an5w3r.an5w3rBot;
 
 import com.alibaba.fastjson.JSONObject;
+import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.entity.Request;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 
 public class TestJson {
@@ -74,5 +76,16 @@ public class TestJson {
     @Test
     public void testJSONSetting() throws IOException {
         System.out.println(JSONUtil.getSettingMap());
+    }
+    @Test
+    public void testRandom(){
+        Random random = new Random(System.currentTimeMillis());
+        for (int i = 0; i < 10; i++) {
+            System.out.print(random.nextInt(10)+" ");
+        }
+    }
+
+    @Test
+    public void testGetFriendList(){
     }
 }

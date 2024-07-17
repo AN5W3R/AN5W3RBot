@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class MsgAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
@@ -32,11 +34,21 @@ public class MsgAction {
         }
         //这里要使用不同的方法来决定不同的发生内容
         params.put("message",RetMessage);
+
+
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("send_msg");
         paramsRequest.setParams(params);
 
-        String msg = JSONObject.toJSONString(paramsRequest);//将请求转换为json
-        Client.instance.session.getAsyncRemote().sendText(msg);//发出请求
+        String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
+        Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
+    }
+
+    public synchronized static void getFriendList() throws ExecutionException, InterruptedException {
+        Request<Object> paramsRequest = new Request<>();
+        paramsRequest.setAction("get_friend_list");
+
+        String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
+        Client.instance.session.getAsyncRemote().sendText(strRequest).get();//发出请求
     }
 }

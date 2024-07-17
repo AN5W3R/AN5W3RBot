@@ -4,7 +4,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.io.Serializable;
- 
+import java.util.Map;
+
 @Data
 public class Message implements Serializable {
  
@@ -26,8 +27,7 @@ public class Message implements Serializable {
     private String subType;
     @JSONField(name = "user_id")
     private String userId;
-    @JSONField(name = "sender_id")
-    private String senderId;
+    private Map<String,String> sender;
     @JSONField(name = "group_id")
     private String groupId;
     @JSONField(name = "target_id")

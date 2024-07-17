@@ -7,9 +7,8 @@ import java.net.URL;
 import java.util.*;
 
 public class ImageUtil {
-    public static String getRandomImageLocal() throws IOException {
-        String folderPath = JSONUtil.getSettingMap().get("ImageSrc");
-        File folder = new File(folderPath);
+    public static String getRandomImageLocal(String src) throws IOException {
+        File folder = new File(src);
         List<String> imagePaths = new ArrayList<>();
 
         if (folder.isDirectory()) {
