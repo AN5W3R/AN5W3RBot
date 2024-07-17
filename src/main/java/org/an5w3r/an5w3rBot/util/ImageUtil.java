@@ -4,10 +4,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ImageUtil {
     public static String getRandomImageLocal() throws IOException {
@@ -24,7 +21,7 @@ public class ImageUtil {
         }
 
         if (!imagePaths.isEmpty()) {
-            Random random = new Random();
+            Random random = new Random(System.currentTimeMillis());
             String randomImagePath = imagePaths.get(random.nextInt(imagePaths.size()));
             try {
                 String base64Image = encodeFileToBase64Binary(randomImagePath);
@@ -32,8 +29,6 @@ public class ImageUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            return getRandomImageUrl();
         }
         return getRandomImageUrl();
     }
