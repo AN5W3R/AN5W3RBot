@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.entity.Request;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
+import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -68,5 +69,10 @@ public class TestJson {
     @Test
     public void testImage(){
         System.out.println(ImageUtil.getRandomImageUrl());
+    }
+
+    @Test
+    public void testJSONSetting() throws IOException {
+        System.out.println(JSONUtil.getSettingMap());
     }
 }

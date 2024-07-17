@@ -17,20 +17,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 public class MsgUtil {
-    //在json文件中获取所有回复
-    public static Map<String, String[]> getTextMsgMap() throws IOException {
-        String jsonStr = null;
-        // 创建一个 Path 对象，表示要读取的文件路径
-        Path path = Paths.get("AtMessage.json");
-
-        // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
-        byte[] bytes = Files.readAllBytes(path);
-        jsonStr = new String(bytes, Charset.forName("UTF-8"));
-
-        Map<String, String[]> resultMap = JSON.parseObject(jsonStr, new TypeReference<Map<String, String[]>>() {}.getType());
-
-        return resultMap;
-    }
     //TODO 更换API
     public static String getAiMsg(String sendMsg) {
         try {

@@ -25,7 +25,7 @@ public class AN5W3RBotApplication implements CommandLineRunner {
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (!Status.isOpen || Client.instance == null) {
+                if (!Setting.isOpen || Client.instance == null) {
                     Client.connect("ws://127.0.0.1:6700");
                     logger.error("正在断线重连！");
                 }

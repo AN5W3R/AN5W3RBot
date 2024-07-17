@@ -35,13 +35,13 @@ public class Client {
  
     @OnOpen
     public void onOpen(Session session) {
-        Status.isOpen = true;
+        Setting.isOpen = true;
         logger.info("连接成功！");
     }
  
     @OnClose
     public void onClose(Session session) {
-        Status.isOpen = false;
+        Setting.isOpen = false;
         logger.info("连接关闭！");
     }
  

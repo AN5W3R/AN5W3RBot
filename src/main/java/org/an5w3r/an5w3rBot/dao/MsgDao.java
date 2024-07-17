@@ -1,6 +1,7 @@
 package org.an5w3r.an5w3rBot.dao;
 
 import org.an5w3r.an5w3rBot.util.ImageUtil;
+import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.an5w3r.an5w3rBot.util.MsgUtil;
 
 import java.io.IOException;
@@ -12,7 +13,8 @@ import java.util.Random;
 public class MsgDao {
     //获取回复的文本
     public static String getTextByMsg(String in) throws IOException {
-        Map<String, String[]> TextJsonMap =  MsgUtil.getTextMsgMap();
+//        Map<String, String[]> TextJsonMap =  MsgUtil.getTextMsgMap();
+        Map<String, String[]> TextJsonMap = JSONUtil.getTextMsgMap();
         for (String s : TextJsonMap.keySet()) {
             if (in.contains(s)) {
                 String[] value = TextJsonMap.get(s);
@@ -36,6 +38,6 @@ public class MsgDao {
 //                return value[index];
 //            }
 //        }
-        return ImageUtil.getRandomImageUrl();
+        return ImageUtil.getRandomImageLocal();
     }
 }
