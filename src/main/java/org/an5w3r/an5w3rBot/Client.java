@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -79,12 +80,17 @@ public class Client {
 
                         //功能系统
                         //TODO 这里改为从外部获取
-                        if (msgStr[0].contains("涩图") && SwitchService.isFunctionOn(parseObject,"涩图")) {
-                            MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage("涩图"));
-                        } else if (msgStr[0].contains("美图") && SwitchService.isFunctionOn(parseObject,"美图")){
-                            MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage("美图"));
-                        } else if (msgStr[0].contains("翻译")) {//#翻译 文本 源语言 目标语言
+
+                        if (msgStr[0].contains("翻译") && SwitchService.isFunctionOn(parseObject,"翻译")) {//#翻译 文本 源语言 目标语言
                             MsgAction.sendMsg(parseObject,MsgService.msgTranslationText(msgStr));
+                        } else {
+                            Map<String, String> imageFunctionMap = JSONUtil.getImageFunctionMap();
+                            for (String key : imageFunctionMap.keySet()) {
+                                if (msgStr[0].contains(key)) {
+                                    MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage(key));
+                                    break;
+                                }
+                            }
                         }
                     } else {
                         MsgAction.sendMsg(parseObject, MsgService.msgOneText(message));

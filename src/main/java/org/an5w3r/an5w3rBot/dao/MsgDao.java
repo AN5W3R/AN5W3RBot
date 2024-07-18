@@ -14,7 +14,7 @@ import java.util.Random;
 public class MsgDao {
     //对比关键词获取回复,没有关键词则使用ai回复
     public static String getTextByMsg(String in) throws IOException {
-        Map<String, String[]> TextJsonMap = JSONUtil.getTextMsgMap();
+        Map<String, String[]> TextJsonMap = JSONUtil.getTextMap();
         for (String s : TextJsonMap.keySet()) {
             if (in.contains(s)) {
                 String[] value = TextJsonMap.get(s);
@@ -63,14 +63,9 @@ public class MsgDao {
         return TextUtil.getTranslation(text,sourceLang,targetLang);//#翻译 文本 源语言 目标语言
     }
 
-    public static String getImageByMsg(String in) throws IOException {//暂时没写逻辑,发送随机图
-        String src = null;
-        if ("涩图".equals(in)){
-            src = JSONUtil.getSettingMap().get("SexImageSrc");
-        } else if ("美图".equals(in)){
-            src = JSONUtil.getSettingMap().get("ImageSrc");
-        }
-//        System.out.println(src);
+    public static String getImageByMsg(String in) throws IOException {//外部获取图库
+        String src = JSONUtil.getImageFunctionMap().get(in);
+
         return ImageUtil.getRandomImageLocal(src);
     }
 }

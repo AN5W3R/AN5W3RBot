@@ -10,12 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SwitchService {
-    public static List<String> functionList ;
+    public static List<String> functionList = new ArrayList<>();;
 
     static {
-        functionList = new ArrayList<>();
-        functionList.add("涩图");
-        functionList.add("美图");
         functionList.add("翻译");
     }
 
@@ -36,7 +33,10 @@ public class SwitchService {
         }
     }
 
-    public static boolean isFunction(String functionName){//判断功能是否存在
+    public static boolean isFunction(String functionName) throws IOException {//判断功能是否存在
+        if (JSONUtil.getImageFunctionMap().containsKey(functionName)) {
+            return true;
+        }
         return functionList.contains(functionName);
     }
 

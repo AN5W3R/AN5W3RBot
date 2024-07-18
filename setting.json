@@ -1,7 +1,6 @@
 {
-  "AtMessageSrc": "D:\\QQBOT\\AN5W3RBot\\AtMessage.json",
-  "ImageSrc": "D:\\QQBOT\\AN5W3RBot\\Images",
-  "SexImageSrc": "D:\\QQBOT\\AN5W3RBot\\Images\\7.13",
+  "AtMessageSrc": "D:\\QQBOT\\AN5W3RBot\\conf\\AtMessage.json",
+  "ImageSrcLib" : "D:\\QQBOT\\AN5W3RBot\\conf\\ImageSrc.json",
   "port": "6700",
   "identifier": ".",
   "deepL_Key": ""

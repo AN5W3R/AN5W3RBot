@@ -92,4 +92,10 @@ public class TestJson {
         String[] str = {"@2222","翻译","水","英"};
         System.out.println(MsgDao.getTranslation(str));
     }
+
+    @Test
+    public void testImageSrc() throws IOException {
+        Map<String, String> imageMap = JSONUtil.getImageFunctionMap();
+        System.out.println(imageMap.get("美图"));
+    }
 }
