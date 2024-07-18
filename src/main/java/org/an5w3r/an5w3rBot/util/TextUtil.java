@@ -1,11 +1,15 @@
 package org.an5w3r.an5w3rBot.util;
 
+import com.deepl.api.DeepLException;
+import com.deepl.api.TextResult;
+import com.deepl.api.Translator;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class TextUtil {
@@ -24,5 +28,19 @@ public class TextUtil {
         } catch (Exception e) {
             return "出了点小问题";
         }
+    }
+
+    public static String getTranslation(String text, String sourceLang, String targetLang){
+
+        TextResult result = null;
+        try {
+            String authKey = JSONUtil.getSettingMap().get("deepL_Key");
+            Translator translator = new Translator(authKey);
+            result = translator.translateText(text, sourceLang, targetLang);
+        } catch (DeepLException | InterruptedException | IOException e) {
+            return "出了点小问题";
+        }
+
+        return result.getText();
     }
 }

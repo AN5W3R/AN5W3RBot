@@ -1,5 +1,6 @@
 package org.an5w3r.an5w3rBot.dao;
 
+import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.an5w3r.an5w3rBot.util.TextUtil;
@@ -27,6 +28,42 @@ public class MsgDao {
         return TextUtil.getAiMsg(encodedString);
     }
 
+    public static String getTranslation(String[] str){
+        if (str.length == 2){
+            return "请输入待翻译文本";
+        }
+        String text = null;
+        String sourceLang = null;
+        String targetLang = "ZH";
+        if (str.length >= 3){//#翻译 文本
+            text = str[2];
+        }
+        if (str.length >= 4){//#翻译 文本 目标语言
+            if (str[3].contains("中")) {
+                targetLang = "ZH";
+            } else if (str[3].contains("英")) {
+                targetLang = "EN";
+            } else if (str[3].contains("日")) {
+                targetLang = "JA";
+            } else {
+                targetLang = str[3];
+            }
+
+        }
+        if (str.length >= 5){
+            if (str[4].contains("中")) {
+                sourceLang = "ZH";
+            } else if (str[4].contains("英")) {
+                sourceLang = "EN";
+            } else if (str[4].contains("日")) {
+                sourceLang = "JA";
+            } else {
+                sourceLang = str[4];
+            }
+        }
+        return TextUtil.getTranslation(text,sourceLang,targetLang);//#翻译 文本 源语言 目标语言
+    }
+
     public static String getImageByMsg(String in) throws IOException {//暂时没写逻辑,发送随机图
         String src = null;
         if ("涩图".equals(in)){
@@ -34,7 +71,7 @@ public class MsgDao {
         } else if ("美图".equals(in)){
             src = JSONUtil.getSettingMap().get("ImageSrc");
         }
-        System.out.println(src);
+//        System.out.println(src);
         return ImageUtil.getRandomImageLocal(src);
     }
 }

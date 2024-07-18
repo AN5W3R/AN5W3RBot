@@ -2,10 +2,12 @@ package org.an5w3r.an5w3rBot;
 
 import com.alibaba.fastjson.JSONObject;
 import org.an5w3r.an5w3rBot.action.MsgAction;
+import org.an5w3r.an5w3rBot.dao.MsgDao;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.entity.Request;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
+import org.an5w3r.an5w3rBot.util.TextUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -86,6 +88,8 @@ public class TestJson {
     }
 
     @Test
-    public void testGetFriendList(){
+    public void testGetTranslation(){
+        String[] str = {"@2222","翻译"};
+        System.out.println(MsgDao.getTranslation(str));
     }
 }

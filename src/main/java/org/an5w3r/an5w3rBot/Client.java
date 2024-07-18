@@ -69,20 +69,23 @@ public class Client {
                             "[CQ:at,qq="+parseObject.getSelfId()+"] "+ JSONUtil.getSettingMap().get("identifier"))
                     ){ //调用功能
                         String[] msgStr = parseObject.getRawMessage().split(" ");
-                        //管理系统
-                        if ("owner".equals(parseObject.getSender().get("role"))||"admin".equals(parseObject.getSender().get("role"))) {//管理功能
-                            if(msgStr[1].contains("功能管理")){//控制功能开关
+                        //msgStr[0]@ [1]功能名称 [2...]功能参数
+                        //管理功能
+                        if(msgStr[1].contains("功能管理")){//控制功能开关
+                            if ("owner".equals(parseObject.getSender().get("role"))||"admin".equals(parseObject.getSender().get("role"))){
                                 SwitchService.changeFunction(parseObject, msgStr);
                             }
                         }
 
-                        //@功能系统
+                        //功能系统
+                        //TODO 这里改为从外部获取
                         if (msgStr[1].contains("涩图") && SwitchService.isFunctionOn(parseObject,"涩图")) {
                             MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage("涩图"));
                         } else if (msgStr[1].contains("美图") && SwitchService.isFunctionOn(parseObject,"美图")){
                             MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage("美图"));
+                        } else if (msgStr[1].contains("翻译")) {//#翻译 文本 源语言 目标语言
+                            MsgAction.sendMsg(parseObject,MsgService.msgTranslationText(msgStr));
                         }
-
                     } else {
                         MsgAction.sendMsg(parseObject, MsgService.msgOneText(message));
                     }

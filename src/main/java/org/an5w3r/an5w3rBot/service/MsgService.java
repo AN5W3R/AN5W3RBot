@@ -23,6 +23,16 @@ public class MsgService {//这里写具体如何回复
         return msgList;
     }
 
+
+    public static ArrayList<MsgItem> msgTranslationText(String[] msgStr){//#翻译 文本 目标语言 源语言
+        ArrayList<MsgItem> msgList = new ArrayList<>();
+
+        MsgItem item = new MsgItem("text","text",MsgDao.getTranslation(msgStr));
+        msgList.add(item);
+
+        return msgList;
+    }
+
     public static ArrayList<MsgItem> msgOneRandomImage(String message) throws IOException {
         ArrayList<MsgItem> msgList = new ArrayList<>();
         MsgItem item = new MsgItem("image","file", MsgDao.getImageByMsg(message));
