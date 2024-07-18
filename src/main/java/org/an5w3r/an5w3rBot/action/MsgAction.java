@@ -18,15 +18,15 @@ import java.util.concurrent.Future;
 public class MsgAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
 
-    public synchronized static void sendMsg(Message parseObject, String detailType, ArrayList<MsgItem> RetMessage) throws IOException {
+    public synchronized static void sendMsg(Message parseObject, ArrayList<MsgItem> RetMessage) throws IOException {
         String message = parseObject.getRawMessage();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("detail_type",detailType);
-        if("private".equals(detailType)){
+        params.put("detail_type",parseObject.getMessageType());
+        if("private".equals(parseObject.getMessageType())){
             logger.info("收到好友" + parseObject.getUserId() + "的消息：" + message);
             params.put("user_id", parseObject.getUserId());
-        } else if("group".equals(detailType)){
+        } else if("group".equals(parseObject.getMessageType())){
             logger.info("收到群" + parseObject.getGroupId() + "的消息：" + message);
             params.put("group_id", parseObject.getGroupId());
         } else {
