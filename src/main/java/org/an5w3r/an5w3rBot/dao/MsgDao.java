@@ -29,36 +29,35 @@ public class MsgDao {
     }
 
     public static String getTranslation(String[] str){
-        if (str.length == 2){
+        if (str.length == 1){
             return "请输入待翻译文本";
         }
         String text = null;
         String sourceLang = null;
         String targetLang = "ZH";
-        if (str.length >= 3){//#翻译 文本
-            text = str[2];
+        if (str.length >= 2){//#翻译 文本
+            text = str[1];
         }
-        if (str.length >= 4){//#翻译 文本 目标语言
-            if (str[3].contains("中")) {
+        if (str.length >= 3){//#翻译 文本 目标语言
+            if (str[2].contains("中")) {
                 targetLang = "ZH";
-            } else if (str[3].contains("英")) {
-                targetLang = "EN";
-            } else if (str[3].contains("日")) {
+            } else if (str[2].contains("英")) {
+                targetLang = "EN-US";
+            } else if (str[2].contains("日")) {
                 targetLang = "JA";
             } else {
-                targetLang = str[3];
+                targetLang = str[2];
             }
-
         }
-        if (str.length >= 5){
-            if (str[4].contains("中")) {
+        if (str.length >= 4){
+            if (str[3].contains("中")) {
                 sourceLang = "ZH";
-            } else if (str[4].contains("英")) {
-                sourceLang = "EN";
-            } else if (str[4].contains("日")) {
+            } else if (str[3].contains("英")) {
+                sourceLang = "EN-US";
+            } else if (str[3].contains("日")) {
                 sourceLang = "JA";
             } else {
-                sourceLang = str[4];
+                sourceLang = str[3];
             }
         }
         return TextUtil.getTranslation(text,sourceLang,targetLang);//#翻译 文本 源语言 目标语言

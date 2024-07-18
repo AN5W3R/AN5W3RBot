@@ -77,7 +77,7 @@ public class ImageUtil {
             // 打印响应内容
             System.out.println("Response Content: " + content.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            return "请求时出了点小问题";
         }
         return content.toString();
     }

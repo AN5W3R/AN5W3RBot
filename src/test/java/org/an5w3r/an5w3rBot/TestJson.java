@@ -89,7 +89,7 @@ public class TestJson {
 
     @Test
     public void testGetTranslation(){
-        String[] str = {"@2222","翻译"};
+        String[] str = {"@2222","翻译","水","英"};
         System.out.println(MsgDao.getTranslation(str));
     }
 }

@@ -26,7 +26,7 @@ public class TextUtil {
 
             return body;
         } catch (Exception e) {
-            return "出了点小问题";
+            return "请求时出了点小问题";
         }
     }
 
@@ -38,7 +38,7 @@ public class TextUtil {
             Translator translator = new Translator(authKey);
             result = translator.translateText(text, sourceLang, targetLang);
         } catch (DeepLException | InterruptedException | IOException e) {
-            return "出了点小问题";
+            return "请求时出了点小问题";
         }
 
         return result.getText();

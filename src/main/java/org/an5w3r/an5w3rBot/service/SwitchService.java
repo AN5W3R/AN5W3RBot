@@ -16,19 +16,20 @@ public class SwitchService {
         functionList = new ArrayList<>();
         functionList.add("涩图");
         functionList.add("美图");
+        functionList.add("翻译");
     }
 
     public static void changeFunction(Message parseObject, String[] str) throws IOException {
-        if (str.length != 4){
+        if (str.length != 3){
             MsgAction.sendMsg(parseObject,MsgService.msgTipsText("命令格式不正确\n正确格式为:\n"+ JSONUtil.getSettingMap().get("identifier")+"功能管理 功能名 开启/关闭"));
             return;
         }
 
-        if (isFunction(str[2])) {
-            if("开启".equals(str[3])){
-                openFunction(parseObject,str[2]);
-            } else if ("关闭".equals(str[3])) {
-                closeFunction(parseObject,str[2]);
+        if (isFunction(str[1])) {
+            if("开启".equals(str[2])){
+                openFunction(parseObject,str[1]);
+            } else if ("关闭".equals(str[2])) {
+                closeFunction(parseObject,str[1]);
             }
         }else {
             MsgAction.sendMsg(parseObject,MsgService.msgTipsText("功能不存在"));
