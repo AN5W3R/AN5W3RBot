@@ -9,15 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class MsgAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
 
-    public synchronized static void sendMsg(Message parseObject, ArrayList<MsgItem> retMessage, boolean isAt) {
+    public synchronized static void sendMsg(Message parseObject, MsgItem... retMessage) throws IOException {
         String message = parseObject.getRawMessage();
 
         Map<String, Object> params = new HashMap<>();
@@ -32,8 +30,9 @@ public class MsgAction {
             return;
         }
         //这里要使用不同的方法来决定不同的发生内容
-        retMessage.add(new MsgItem("at","qq",parseObject.getSender().get("user_id")));
-        params.put("message",retMessage);
+        List<MsgItem> messageList = new ArrayList<>();
+        messageList.addAll(Arrays.asList(retMessage));
+        params.put("message",messageList);
 
 
         Request<Object> paramsRequest = new Request<>();
@@ -43,9 +42,6 @@ public class MsgAction {
         logger.info("发出消息");
         String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
-    }
-    public synchronized static void sendMsg(Message parseObject, ArrayList<MsgItem> retMessage) throws IOException {
-        sendMsg(parseObject,retMessage,false);
     }
 
     public synchronized static void getFriendList() throws ExecutionException, InterruptedException {

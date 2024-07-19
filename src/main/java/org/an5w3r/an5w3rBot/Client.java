@@ -78,12 +78,16 @@ public class Client {
 
                         //功能系统
                         if (msgStr[0].contains("翻译") && SwitchService.isFunctionOn(parseObject,"翻译")) {//#翻译 文本 源语言 目标语言
-                            MsgAction.sendMsg(parseObject,MsgService.msgTranslationText(msgStr),true);
+                            MsgAction.sendMsg(parseObject
+                                    ,MsgService.msgAtQQ(parseObject.getSender().get("user_id"))
+                                    ,MsgService.msgTranslationText(msgStr));
                         } else {
                             Map<String, String> imageFunctionMap = JSONUtil.getImageFunctionMap();
                             for (String key : imageFunctionMap.keySet()) {
                                 if (msgStr[0].contains(key)) {
-                                    MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage(key),true);
+                                    MsgAction.sendMsg(parseObject
+                                            ,MsgService.msgAtQQ(parseObject.getSender().get("user_id"))
+                                            ,MsgService.msgOneRandomImage(key));
                                     break;
                                 }
                             }
