@@ -18,8 +18,6 @@ public class MsgService {//这里写具体如何回复
         ArrayList<MsgItem> msgList = new ArrayList<>();
         MsgItem item = new MsgItem("text","text", MsgDao.getTextByMsg(message));
         msgList.add(item);
-//        MsgItem item1 = new MsgItem("image","file","https://gchat.qpic.cn/gchatpic_new/1542338612/758025242-3108042462-E04E0D37BB15FF418729C4AE9118A180/0?term=255&is_origin=0");
-//        msgList.add(item1);
         return msgList;
     }
 

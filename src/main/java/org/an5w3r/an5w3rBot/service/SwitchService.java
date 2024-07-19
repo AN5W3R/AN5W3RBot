@@ -46,7 +46,7 @@ public class SwitchService {
         if (Setting.FunctionSwitch.containsKey(groupId)) {//判断Map中是否存在群号
             List<String> groupOffFunctions = Setting.FunctionSwitch.get(groupId);
             if (groupOffFunctions.contains(functionName)) {//Map中有对应功能,为关闭
-                MsgAction.sendMsg(parseObject,MsgService.msgTipsText(functionName+"功能已关闭"));
+//                MsgAction.sendMsg(parseObject,MsgService.msgTipsText(functionName+"功能已关闭"));
                 return false;
             }
             return true;//Map中没有对应功能,为打开

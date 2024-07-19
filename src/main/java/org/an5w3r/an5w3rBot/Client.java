@@ -66,9 +66,7 @@ public class Client {
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
                 if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@
-                    if(parseObject.getRawMessage().startsWith(
-                            "[CQ:at,qq="+parseObject.getSelfId()+"] "+ JSONUtil.getSettingMap().get("identifier"))
-                    ){ //调用功能
+                    if(parseObject.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
                         String[] msgStr = parseObject.getRawMessage().split("-");
                         //msgStr[0]@ [1]功能名称 [2...]功能参数
                         //管理功能
@@ -79,15 +77,13 @@ public class Client {
                         }
 
                         //功能系统
-                        //TODO 这里改为从外部获取
-
                         if (msgStr[0].contains("翻译") && SwitchService.isFunctionOn(parseObject,"翻译")) {//#翻译 文本 源语言 目标语言
-                            MsgAction.sendMsg(parseObject,MsgService.msgTranslationText(msgStr));
+                            MsgAction.sendMsg(parseObject,MsgService.msgTranslationText(msgStr),true);
                         } else {
                             Map<String, String> imageFunctionMap = JSONUtil.getImageFunctionMap();
                             for (String key : imageFunctionMap.keySet()) {
                                 if (msgStr[0].contains(key)) {
-                                    MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage(key));
+                                    MsgAction.sendMsg(parseObject, MsgService.msgOneRandomImage(key),true);
                                     break;
                                 }
                             }

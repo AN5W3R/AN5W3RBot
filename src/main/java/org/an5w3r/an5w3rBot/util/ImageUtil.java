@@ -1,5 +1,9 @@
 package org.an5w3r.an5w3rBot.util;
 
+import org.an5w3r.an5w3rBot.Client;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 
@@ -7,6 +11,8 @@ import java.net.URL;
 import java.util.*;
 
 public class ImageUtil {
+    private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
+
     public static String getRandomImageLocal(String src) throws IOException {
         File folder = new File(src);
         List<String> imagePaths = new ArrayList<>();
@@ -75,7 +81,7 @@ public class ImageUtil {
             in.close();
 
             // 打印响应内容
-            System.out.println("Response Content: " + content.toString());
+            logger.info("Response Content: " + content.toString());
         } catch (Exception e) {
             return "请求时出了点小问题";
         }
