@@ -62,38 +62,73 @@ public class Client {
             Message parseObject = JSONObject.parseObject(message, Message.class);//JSON转换为对象
 
             if("private".equals(parseObject.getMessageType())){//私聊信息
-                MsgAction.sendMsg(parseObject, MsgService.msgOneText(message));
+                MsgAction.sendMsg(parseObject, MsgService.oneText(message));
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
                 if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@
+
                     if(parseObject.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
+                        boolean flag = true;
                         String[] msgStr = parseObject.getRawMessage().split("-");
-                        //msgStr[0]@ [1]功能名称 [2...]功能参数
-                        //管理功能
-                        if(msgStr[0].contains("功能管理")){//控制功能开关
+
+                        //功能管理
+                        if(msgStr[0].contains("功能管理")){
+                            flag=false;
                             if ("owner".equals(parseObject.getSender().get("role"))||"admin".equals(parseObject.getSender().get("role"))){
                                 SwitchService.changeFunction(parseObject, msgStr);
+                            } else {
+                                MsgAction.sendMsg(parseObject
+                                        ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                                        ,MsgService.tipsText("你没有管理员权限"));
                             }
                         }
-
-                        //功能系统
-                        if (msgStr[0].contains("翻译") && SwitchService.isFunctionOn(parseObject,"翻译")) {//#翻译 文本 源语言 目标语言
-                            MsgAction.sendMsg(parseObject
-                                    ,MsgService.msgAtQQ(parseObject.getSender().get("user_id"))
-                                    ,MsgService.msgTranslationText(msgStr));
-                        } else {
-                            Map<String, String> imageFunctionMap = JSONUtil.getImageFunctionMap();
-                            for (String key : imageFunctionMap.keySet()) {
+                        //内置功能系统
+                        if(flag){
+                            for (String key : SwitchService.functionList) {//查找功能列表中是否有此功能
                                 if (msgStr[0].contains(key)) {
-                                    MsgAction.sendMsg(parseObject
-                                            ,MsgService.msgAtQQ(parseObject.getSender().get("user_id"))
-                                            ,MsgService.msgOneRandomImage(key));
-                                    break;
+                                    flag=false;
+                                    if (SwitchService.isFunctionOn(parseObject,key)) {
+                                        switch (key){//功能列表
+                                            case "翻译":{
+                                                MsgAction.sendMsg(parseObject
+                                                        ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                                                        ,MsgService.translationText(msgStr));
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        MsgAction.sendMsg(parseObject
+                                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                                                ,MsgService.tipsText(key+"功能已被关闭"));
+                                    }
+
+                                }
+                            }
+                        }
+                        //图库功能系统
+                        if (flag){
+                            Map<String, String> imageFunctionMap = JSONUtil.getImageFunctionMap();
+                            for (String key : imageFunctionMap.keySet()) {//查找图库功能列表
+                                if (msgStr[0].contains(key)) {
+                                    if (SwitchService.isFunctionOn(parseObject,key)) {
+                                        MsgAction.sendMsg(parseObject
+                                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                                                ,MsgService.randomImage(key));//参数即是功能名
+                                        break;
+                                    } else {
+                                        MsgAction.sendMsg(parseObject
+                                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                                                ,MsgService.tipsText(key+"功能已被关闭"));
+                                        break;
+                                    }
+
                                 }
                             }
                         }
                     } else {
-                        MsgAction.sendMsg(parseObject, MsgService.msgOneText(message));
+                        MsgAction.sendMsg(parseObject
+                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                                , MsgService.oneText(message));
                     }
 
                 }

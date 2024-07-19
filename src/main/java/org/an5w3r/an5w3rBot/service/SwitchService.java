@@ -18,7 +18,9 @@ public class SwitchService {
 
     public static void changeFunction(Message parseObject, String[] str) throws IOException {
         if (str.length != 3){
-            MsgAction.sendMsg(parseObject,MsgService.msgTipsText("命令格式不正确\n正确格式为:\n"+ JSONUtil.getSettingMap().get("identifier")+"功能管理 功能名 开启/关闭"));
+            MsgAction.sendMsg(parseObject
+                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                    ,MsgService.tipsText("命令格式不正确\n正确格式为:\n"+ JSONUtil.getSettingMap().get("identifier")+"功能管理 功能名 开启/关闭"));
             return;
         }
 
@@ -29,7 +31,9 @@ public class SwitchService {
                 closeFunction(parseObject,str[1]);
             }
         }else {
-            MsgAction.sendMsg(parseObject,MsgService.msgTipsText("功能不存在"));
+            MsgAction.sendMsg(parseObject
+                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                    ,MsgService.tipsText("功能不存在"));
         }
     }
 
@@ -46,7 +50,6 @@ public class SwitchService {
         if (Setting.FunctionSwitch.containsKey(groupId)) {//判断Map中是否存在群号
             List<String> groupOffFunctions = Setting.FunctionSwitch.get(groupId);
             if (groupOffFunctions.contains(functionName)) {//Map中有对应功能,为关闭
-//                MsgAction.sendMsg(parseObject,MsgService.msgTipsText(functionName+"功能已关闭"));
                 return false;
             }
             return true;//Map中没有对应功能,为打开
@@ -62,9 +65,13 @@ public class SwitchService {
         String groupId = parseObject.getGroupId();
 
         if (isFunctionOn(parseObject,functionName)) {
-            MsgAction.sendMsg(parseObject,MsgService.msgTipsText("功能已经是开启状态了"));
+            MsgAction.sendMsg(parseObject
+                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                    ,MsgService.tipsText("功能已经是开启状态了"));
         } else {
-            MsgAction.sendMsg(parseObject,MsgService.msgTipsText("功能已开启"));
+            MsgAction.sendMsg(parseObject
+                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                    ,MsgService.tipsText("功能已开启"));
             Setting.FunctionSwitch.get(groupId).remove(functionName);
         }
 
@@ -74,9 +81,13 @@ public class SwitchService {
         String groupId = parseObject.getGroupId();
 
         if (!isFunctionOn(parseObject,functionName)) {
-            MsgAction.sendMsg(parseObject,MsgService.msgTipsText("功能已经是关闭状态了"));
+            MsgAction.sendMsg(parseObject
+                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                    ,MsgService.tipsText("功能已经是关闭状态了"));
         } else {
-            MsgAction.sendMsg(parseObject,MsgService.msgTipsText("功能已关闭"));
+            MsgAction.sendMsg(parseObject
+                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
+                    ,MsgService.tipsText("功能已关闭"));
             Setting.FunctionSwitch.get(groupId).add(functionName);
         }
     }
