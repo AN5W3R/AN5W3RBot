@@ -3,8 +3,11 @@ package org.an5w3r.an5w3rBot;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.websocket.*;
 import org.an5w3r.an5w3rBot.action.MsgAction;
+import org.an5w3r.an5w3rBot.dao.ImageDao;
+import org.an5w3r.an5w3rBot.dao.TextDao;
+import org.an5w3r.an5w3rBot.entity.Image;
 import org.an5w3r.an5w3rBot.entity.Message;
-import org.an5w3r.an5w3rBot.service.MsgService;
+import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.service.SwitchService;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.Logger;
@@ -62,7 +65,8 @@ public class Client {
             Message parseObject = JSONObject.parseObject(message, Message.class);//JSON转换为对象
 
             if("private".equals(parseObject.getMessageType())){//私聊信息
-                MsgAction.sendMsg(parseObject, MsgService.oneText(message));
+                MsgAction.sendMsg(parseObject
+                        ,new MsgItem(TextDao.getTextByMsg(message)));
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
                 if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@
@@ -78,10 +82,11 @@ public class Client {
                                 SwitchService.changeFunction(parseObject, msgStr);
                             } else {
                                 MsgAction.sendMsg(parseObject
-                                        ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                                        ,MsgService.tipsText("你没有管理员权限"));
+                                        ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                        ,new MsgItem("你没有管理员权限"));
                             }
                         }
+                        //TODO 把功能包装成类,input:拆分后的msgStr,msgStr[0]为功能名称
                         //内置功能系统
                         if(flag){
                             for (String key : SwitchService.functionList) {//查找功能列表中是否有此功能
@@ -91,15 +96,15 @@ public class Client {
                                         switch (key){//功能列表
                                             case "翻译":{
                                                 MsgAction.sendMsg(parseObject
-                                                        ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                                                        ,MsgService.translationText(msgStr));
+                                                        ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                                        ,new MsgItem(TextDao.getTranslation(msgStr)));
                                                 break;
                                             }
                                         }
                                     } else {
                                         MsgAction.sendMsg(parseObject
-                                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                                                ,MsgService.tipsText(key+"功能已被关闭"));
+                                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                                ,new MsgItem(key+"功能已被关闭"));
                                     }
 
                                 }
@@ -107,18 +112,22 @@ public class Client {
                         }
                         //图库功能系统
                         if (flag){
-                            Map<String, String> imageFunctionMap = JSONUtil.getImageFunctionMap();
+                            //TODO 更新图库功能
+                            Map<String, String> imageFunctionMap = JSONUtil.getImageSrcMap();
                             for (String key : imageFunctionMap.keySet()) {//查找图库功能列表
                                 if (msgStr[0].contains(key)) {
                                     if (SwitchService.isFunctionOn(parseObject,key)) {
+                                        Image image = ImageDao.getImageByMsg(key);
                                         MsgAction.sendMsg(parseObject
-                                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                                                ,MsgService.randomImage(key));//参数即是功能名
+                                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                                ,new MsgItem("image","file", image.getFile())
+                                                ,new MsgItem(image.getText())
+                                        );//参数即是功能名
                                         break;
                                     } else {
                                         MsgAction.sendMsg(parseObject
-                                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                                                ,MsgService.tipsText(key+"功能已被关闭"));
+                                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                                ,new MsgItem(key+"功能已被关闭"));
                                         break;
                                     }
 
@@ -127,8 +136,8 @@ public class Client {
                         }
                     } else {
                         MsgAction.sendMsg(parseObject
-                                ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                                , MsgService.oneText(message));
+                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                ,new MsgItem(TextDao.getTextByMsg(message)));
                     }
 
                 }

@@ -1,6 +1,7 @@
 package org.an5w3r.an5w3rBot.util;
 
 import org.an5w3r.an5w3rBot.Client;
+import org.an5w3r.an5w3rBot.entity.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,9 @@ import java.util.*;
 public class ImageUtil {
     private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
 
-    public static String getRandomImageLocal(String src) throws IOException {
+    public static Image getRandomImageLocal(String src) throws IOException {
+        Image retImg = new Image();
+        //无法获取图片名称
         File folder = new File(src);
         List<String> imagePaths = new ArrayList<>();
 
@@ -29,35 +32,22 @@ public class ImageUtil {
             Random random = new Random(System.currentTimeMillis());
             String randomImagePath = imagePaths.get(random.nextInt(imagePaths.size()));
             try {
+                File file = new File(randomImagePath);
+                retImg.setFileName(file.getName());
                 String base64Image = encodeFileToBase64Binary(randomImagePath);
-                return "base64://"+base64Image;//这里换return
+                retImg.setFile("base64://"+base64Image);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            retImg.setFileName("FromURL");
+            retImg.setFile(getRandomImageUrl());
+            retImg.setText("图片来源网络");
+            retImg.setType("网络图片");
         }
-        return getRandomImageUrl();
-    }
 
-    private static boolean isImageFile(File file) {
-        String[] imageExtensions = { "jpg", "jpeg", "png", "gif", "bmp" };
-        String fileName = file.getName().toLowerCase();
-        for (String extension : imageExtensions) {
-            if (fileName.endsWith(extension)) {
-                return true;
-            }
-        }
-        return false;
+        return retImg;
     }
-
-    private static String encodeFileToBase64Binary(String filePath) throws IOException {
-        File file = new File(filePath);
-        FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] bytes = new byte[(int) file.length()];
-        fileInputStream.read(bytes);
-        fileInputStream.close();
-        return Base64.getEncoder().encodeToString(bytes);
-    }
-
 
     public static String getRandomImageUrl(){
 //        https://api.sevin.cn/api/ecy.php
@@ -87,5 +77,26 @@ public class ImageUtil {
         }
         return content.toString();
     }
+
+    private static boolean isImageFile(File file) {
+        String[] imageExtensions = { "jpg", "jpeg", "png", "gif", "bmp" };
+        String fileName = file.getName().toLowerCase();
+        for (String extension : imageExtensions) {
+            if (fileName.endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String encodeFileToBase64Binary(String filePath) throws IOException {
+        File file = new File(filePath);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] bytes = new byte[(int) file.length()];
+        fileInputStream.read(bytes);
+        fileInputStream.close();
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
 }
 

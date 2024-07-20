@@ -1,13 +1,14 @@
 package org.an5w3r.an5w3rBot;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.an5w3r.an5w3rBot.action.MsgAction;
-import org.an5w3r.an5w3rBot.dao.MsgDao;
+import com.alibaba.fastjson.TypeReference;
+import lombok.Data;
+import org.an5w3r.an5w3rBot.dao.TextDao;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.entity.Request;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
-import org.an5w3r.an5w3rBot.util.TextUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -15,10 +16,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 public class TestJson {
@@ -90,12 +88,36 @@ public class TestJson {
     @Test
     public void testGetTranslation(){
         String[] str = {"@2222","翻译","水","英"};
-        System.out.println(MsgDao.getTranslation(str));
+        System.out.println(TextDao.getTranslation(str));
     }
 
     @Test
     public void testImageSrc() throws IOException {
-        Map<String, String> imageMap = JSONUtil.getImageFunctionMap();
+        Map<String, String> imageMap = JSONUtil.getImageSrcMap();
         System.out.println(imageMap.get("美图"));
+    }
+
+    @Data
+    class functionItem{
+        String functionName;
+        List<String[]> params;
+        List<String> msgItem;
+
+    }
+    @Test
+    public void getFunctionTest() throws IOException {
+        String jsonStr = null;
+        // 创建一个 Path 对象，表示要读取的文件路径
+        Path path = Paths.get("D:\\QQBOT\\AN5W3RBot\\test\\functionName.json");
+
+        // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
+        byte[] bytes = Files.readAllBytes(path);
+        jsonStr = new String(bytes, Charset.forName("UTF-8"));
+
+        System.out.println(jsonStr);
+        functionItem functionItem = JSON.parseObject(jsonStr, functionItem.class);
+        System.out.println(functionItem);
+//        Map<String, String[]> resultMap = JSON.parseObject(jsonStr, new TypeReference<Map<String, String[]>>() {}.getType());
+
     }
 }

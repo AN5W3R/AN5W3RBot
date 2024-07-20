@@ -3,16 +3,22 @@ package org.an5w3r.an5w3rBot.util;
 import com.deepl.api.DeepLException;
 import com.deepl.api.TextResult;
 import com.deepl.api.Translator;
+import org.an5w3r.an5w3rBot.entity.Image;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Random;
 
 public class TextUtil {
+    private static final Logger logger = LoggerFactory.getLogger(TextUtil.class);
     //TODO 更换API
     public static String getAiMsg(String sendMsg) {
         try {
@@ -43,4 +49,27 @@ public class TextUtil {
 
         return result.getText();
     }
+
+    public static String getTextByImage(Image image) throws IOException {
+        //如果没有对应文本返回null
+        String in = image.getFileName();
+        String type = image.getType();
+
+        String imgSrc = JSONUtil.getImageSrcMap().get(type);
+        Map<String, String[]> TextJsonMap = JSONUtil.getImageTextMap(imgSrc);
+        if (TextJsonMap == null){
+            logger.info("文本文件不存在");
+            return null;
+        }
+        for (String s : TextJsonMap.keySet()) {
+            if (in.contains(s)) {
+                String[] value = TextJsonMap.get(s);
+                Random r = new Random();//util.Random
+                int index =r.nextInt(value.length);
+                return value[index];
+            }
+        }
+        return null;
+    }
+
 }

@@ -3,6 +3,7 @@ package org.an5w3r.an5w3rBot.service;
 import org.an5w3r.an5w3rBot.Setting;
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.entity.Message;
+import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 
 import java.io.IOException;
@@ -19,8 +20,8 @@ public class SwitchService {
     public static void changeFunction(Message parseObject, String[] str) throws IOException {
         if (str.length != 3){
             MsgAction.sendMsg(parseObject
-                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                    ,MsgService.tipsText("命令格式不正确\n正确格式为:\n"+ JSONUtil.getSettingMap().get("identifier")+"功能管理 功能名 开启/关闭"));
+                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                    ,new MsgItem("命令格式不正确\n正确格式为:\n"+ JSONUtil.getSettingMap().get("identifier")+"功能管理 功能名 开启/关闭"));
             return;
         }
 
@@ -32,13 +33,13 @@ public class SwitchService {
             }
         }else {
             MsgAction.sendMsg(parseObject
-                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                    ,MsgService.tipsText("功能不存在"));
+                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                    ,new MsgItem("功能不存在"));
         }
     }
 
     public static boolean isFunction(String functionName) throws IOException {//判断功能是否存在
-        if (JSONUtil.getImageFunctionMap().containsKey(functionName)) {
+        if (JSONUtil.getImageSrcMap().containsKey(functionName)) {
             return true;
         }
         return functionList.contains(functionName);
@@ -66,12 +67,12 @@ public class SwitchService {
 
         if (isFunctionOn(parseObject,functionName)) {
             MsgAction.sendMsg(parseObject
-                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                    ,MsgService.tipsText("功能已经是开启状态了"));
+                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                    ,new MsgItem("功能已经是开启状态了"));
         } else {
             MsgAction.sendMsg(parseObject
-                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                    ,MsgService.tipsText("功能已开启"));
+                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                    ,new MsgItem("功能已开启"));
             Setting.FunctionSwitch.get(groupId).remove(functionName);
         }
 
@@ -82,12 +83,12 @@ public class SwitchService {
 
         if (!isFunctionOn(parseObject,functionName)) {
             MsgAction.sendMsg(parseObject
-                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                    ,MsgService.tipsText("功能已经是关闭状态了"));
+                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                    ,new MsgItem("功能已经是关闭状态了"));
         } else {
             MsgAction.sendMsg(parseObject
-                    ,MsgService.atQQ(parseObject.getSender().get("user_id"))
-                    ,MsgService.tipsText("功能已关闭"));
+                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                    ,new MsgItem("功能已关闭"));
             Setting.FunctionSwitch.get(groupId).add(functionName);
         }
     }
