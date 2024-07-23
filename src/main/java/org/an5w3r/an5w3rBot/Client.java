@@ -2,6 +2,7 @@ package org.an5w3r.an5w3rBot;
 
 import com.alibaba.fastjson.JSONObject;
 import jakarta.websocket.*;
+import org.an5w3r.an5w3rBot.action.GroupAction;
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.dao.ImageDao;
 import org.an5w3r.an5w3rBot.dao.TextDao;
@@ -69,8 +70,13 @@ public class Client {
                         ,new MsgItem(TextDao.getTextByMsg(message)));
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
-                if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@
+                if (parseObject.getSender().get("user_id").equals("1542338612")){//小莫说话
+//                    MsgAction.deleteMsg(parseObject);
+//                    GroupAction.setGroupCard(parseObject,"笨蛋");
+                    GroupAction.setGroupBan(parseObject,1);
+                }
 
+                if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@
                     if(parseObject.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
                         boolean flag = true;
                         String[] msgStr = parseObject.getRawMessage().split("-");
@@ -82,7 +88,7 @@ public class Client {
                                 SwitchService.changeFunction(parseObject, msgStr);
                             } else {
                                 MsgAction.sendMsg(parseObject
-                                        ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                        ,MsgItem.atItem(parseObject.getUserId())
                                         ,new MsgItem("你没有管理员权限"));
                             }
                         }
@@ -96,14 +102,14 @@ public class Client {
                                         switch (key){//功能列表
                                             case "翻译":{
                                                 MsgAction.sendMsg(parseObject
-                                                        ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                                        ,MsgItem.atItem(parseObject.getUserId())
                                                         ,new MsgItem(TextDao.getTranslation(msgStr)));
                                                 break;
                                             }
                                         }
                                     } else {
                                         MsgAction.sendMsg(parseObject
-                                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                                ,MsgItem.atItem(parseObject.getUserId())
                                                 ,new MsgItem(key+"功能已被关闭"));
                                     }
 
@@ -119,7 +125,7 @@ public class Client {
                                     if (SwitchService.isFunctionOn(parseObject,key)) {
                                         Image image = ImageDao.getImageByMsg(key);
                                         MsgAction.sendMsg(parseObject
-                                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                                ,MsgItem.atItem(parseObject.getUserId())
                                                 ,new MsgItem("image","file", image.getFile())
                                                 ,new MsgItem(image.getText())
                                         );//参数即是功能名

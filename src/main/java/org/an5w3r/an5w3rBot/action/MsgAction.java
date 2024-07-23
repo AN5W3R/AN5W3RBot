@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 public class MsgAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
 
+    //发送消息
     public synchronized static void sendMsg(Message parseObject, MsgItem... retMessage) throws IOException {
         String message = parseObject.getRawMessage();
 
@@ -44,11 +45,15 @@ public class MsgAction {
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
     }
 
-    public synchronized static void getFriendList() throws ExecutionException, InterruptedException {
-        Request<Object> paramsRequest = new Request<>();
-        paramsRequest.setAction("get_friend_list");
+   public synchronized static void deleteMsg(Message parseObject){
+       Request<Object> paramsRequest = new Request<>();
+       paramsRequest.setAction("delete_msg");
+       Map<String,String> map = new HashMap<>();
+       map.put("message_id",parseObject.getMessageId());
+       paramsRequest.setParams(map);
 
-        String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
-        Client.instance.session.getAsyncRemote().sendText(strRequest).get();//发出请求
-    }
+       logger.info("撤回消息");
+       String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
+       Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
+   }
 }
