@@ -50,6 +50,7 @@ public class TextUtil {
         return result.getText();
     }
 
+    // TODO 改为BySrc
     public static String getTextByImage(Image image) throws IOException {
         //如果没有对应文本返回null
         String in = image.getFileName();

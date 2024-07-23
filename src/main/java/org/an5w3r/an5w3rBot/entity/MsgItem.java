@@ -14,7 +14,7 @@ public class MsgItem {
     }
 
     public MsgItem(String text){
-        this("text","text", text);
+        this("text","text","\n"+ text);
     }
 
     public MsgItem(String type, String dataType, String message) {
