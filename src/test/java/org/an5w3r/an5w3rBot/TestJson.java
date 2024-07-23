@@ -120,4 +120,31 @@ public class TestJson {
 //        Map<String, String[]> resultMap = JSON.parseObject(jsonStr, new TypeReference<Map<String, String[]>>() {}.getType());
 
     }
+
+
+//    private Timer timer;
+
+    @Test
+    public void testTimer() {
+        Timer timer = new Timer();
+
+        TimerTask task1 = new TimerTask() {
+            public void run() {
+                System.out.println("执行任务1");
+            }
+        };
+        TimerTask task2 = new TimerTask() {
+            public void run() {
+                System.out.println("执行任务2");
+            }
+        };
+        timer.schedule(task1, 0, 3 * 1000);//定时通知
+        timer.schedule(task2, 1000, 2000);
+        // 保持主线程运行一段时间以观察输出
+        try {
+            Thread.sleep(10000); // 10秒
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
