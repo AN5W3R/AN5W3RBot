@@ -1,17 +1,12 @@
 package org.an5w3r.an5w3rBot.service;
 
-
-
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.entity.Team;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameTeamService {
     public static Map<String, Map<String,Team>> groupMap = new HashMap<>();
@@ -36,8 +31,7 @@ public class GameTeamService {
             MsgAction.sendMsg(parseObject,new MsgItem("队伍已存在"));
             return;
         }
-        //注入信息
-
+        //新建队伍注入信息
         Team team = new Team();
         team.setName(msgStr[1]);
         team.setParseObject(parseObject);
@@ -47,8 +41,7 @@ public class GameTeamService {
         team.setSenderList(senderList);
         team.join(parseObject);
 
-        groupMap.get(parseObject.getGroupId()).put(msgStr[1],team);//更新群内队伍列表
-//        groupMap.put(parseObject.getGroupId(),groupMap.get(parseObject.getGroupId()));//更新群列表
+        groupMap.get(parseObject.getGroupId()).put(msgStr[1],team);//加入群内队伍列表
 
         //提示创建成功
         MsgAction.sendMsg(parseObject,new MsgItem("创建队伍成功\n"+team));
@@ -63,12 +56,10 @@ public class GameTeamService {
             MsgAction.sendMsg(parseObject,new MsgItem("队伍不存在"));
             return;
         }
+        //获取队伍
         Team team = groupMap.get(parseObject.getGroupId()).get(msgStr[1]);
-
-
         team.join(parseObject);
-        groupMap.get(parseObject.getGroupId()).put(msgStr[1],team);//更新队伍
-//        groupMap.put(parseObject.getGroupId(),groupMap.get(parseObject.getGroupId()));//更新群列表
+//        groupMap.get(parseObject.getGroupId()).put(msgStr[1],team);//更新队伍
 
         MsgAction.sendMsg(parseObject,new MsgItem(team.toString()));
         if (team.getSenderList().size()== team.getMaxCount()){
@@ -85,10 +76,10 @@ public class GameTeamService {
             MsgAction.sendMsg(parseObject,new MsgItem("队伍不存在"));
             return;
         }
+        //获取队伍
         Team team = groupMap.get(parseObject.getGroupId()).get(msgStr[1]);
         team.leave(parseObject);
-        groupMap.get(parseObject.getGroupId()).put(msgStr[1],team);//更新队伍
-//        groupMap.put(parseObject.getGroupId(),groupMap.get(parseObject.getGroupId()));//更新群列表
+//        groupMap.get(parseObject.getGroupId()).put(msgStr[1],team);//更新队伍
 
         MsgAction.sendMsg(parseObject,new MsgItem(team.toString()));
         if (team.getSenderList().isEmpty()){
@@ -105,6 +96,7 @@ public class GameTeamService {
             MsgAction.sendMsg(parseObject,new MsgItem("队伍不存在"));
             return;
         }
+
         groupMap.get(parseObject.getGroupId()).remove(msgStr[1]);
         MsgAction.sendMsg(parseObject,new MsgItem("队伍"+msgStr[1]+"已解散"));
     }
@@ -122,6 +114,19 @@ public class GameTeamService {
         team.go();
 
         groupMap.get(parseObject.getGroupId()).remove(msgStr[1]);
+    }
+
+    public static void promptTeam() throws IOException {//队伍提醒
+        for (String s : groupMap.keySet()) {
+            Map<String, Team> teamMap = groupMap.get(s);
+            if (!teamMap.isEmpty()){
+                Set<String> teamNames = teamMap.keySet();
+                for (String teamName : teamNames) {
+                    Team team = teamMap.get(teamName);
+                    MsgAction.sendMsg(team.getParseObject(),new MsgItem(team.toString()));
+                }
+            }
+        }
     }
 }
 

@@ -50,7 +50,6 @@ public class TextUtil {
         return result.getText();
     }
 
-    // TODO 改为BySrc
     public static String getTextByImage(Image image) throws IOException {
         //如果没有对应文本返回null
         String in = image.getFileName();
@@ -59,7 +58,6 @@ public class TextUtil {
         String imgSrc = JSONUtil.getImageSrcMap().get(type);
         Map<String, String[]> TextJsonMap = JSONUtil.getImageTextMap(imgSrc);
         if (TextJsonMap == null){
-            logger.info("文本文件不存在");
             return null;
         }
         for (String s : TextJsonMap.keySet()) {

@@ -47,9 +47,9 @@ public class Team {
     public String toString() {
         StringBuffer ret = new StringBuffer(
                 "队伍名称:"+name+
-                        "\n当前人数:" +senderList.size()+"/"+maxCount+
-                        "\n" +text+
-                        "\n人员名单:\n");
+                "\n当前人数:" +senderList.size()+"/"+maxCount+
+                "\n备注:" +text+
+                "\n人员名单:\n");
         for (Map<String, String> sender : senderList) {
             if (sender.get("card").isBlank()){
                 ret.append(sender.get("nickname")+"\n");
