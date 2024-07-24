@@ -9,6 +9,7 @@ import org.an5w3r.an5w3rBot.dao.TextDao;
 import org.an5w3r.an5w3rBot.entity.Image;
 import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
+import org.an5w3r.an5w3rBot.service.GameTeamService;
 import org.an5w3r.an5w3rBot.service.SwitchService;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -70,11 +72,11 @@ public class Client {
                         ,new MsgItem(TextDao.getTextByMsg(message)));
             }
             if ("group".equals(parseObject.getMessageType())) {//群聊信息
-                if (parseObject.getSender().get("user_id").equals("1542338612")){//小莫说话
+//                if (parseObject.getSender().get("user_id").equals("1542338612")){//小莫说话
 //                    MsgAction.deleteMsg(parseObject);
 //                    GroupAction.setGroupCard(parseObject,"笨蛋");
-                    GroupAction.setGroupBan(parseObject,1);
-                }
+//                    GroupAction.setGroupBan(parseObject,1);
+//                }
 
                 if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@
                     if(parseObject.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
@@ -104,6 +106,26 @@ public class Client {
                                                 MsgAction.sendMsg(parseObject
                                                         ,MsgItem.atItem(parseObject.getUserId())
                                                         ,new MsgItem(TextDao.getTranslation(msgStr)));
+                                                break;
+                                            }
+                                            case "摇人":{
+                                                GameTeamService.addTeam(parseObject,msgStr);
+                                                break;
+                                            }
+                                            case "加入":{
+                                                GameTeamService.joinTeam(parseObject,msgStr);
+                                                break;
+                                            }
+                                            case "退出":{
+                                                GameTeamService.leaveTeam(parseObject,msgStr);
+                                                break;
+                                            }
+                                            case "解散":{
+                                                GameTeamService.removeTeam(parseObject,msgStr);
+                                                break;
+                                            }
+                                            case "开了":{
+                                                GameTeamService.playTeam(parseObject,msgStr);
                                                 break;
                                             }
                                         }

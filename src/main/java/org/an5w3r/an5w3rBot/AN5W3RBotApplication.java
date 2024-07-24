@@ -1,6 +1,5 @@
 package org.an5w3r.an5w3rBot;
 
-import lombok.SneakyThrows;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ public class AN5W3RBotApplication implements CommandLineRunner {
         SpringApplication.run(AN5W3RBotApplication.class, args);
     }
 
-    @SneakyThrows
+
     @Override
     public void run(String... args) {
         logger.info("正在连接"+URL);
@@ -38,7 +37,6 @@ public class AN5W3RBotApplication implements CommandLineRunner {
         // 断线重连
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
-            @SneakyThrows
             @Override
             public void run() {
                 if (!Setting.isOpen || Client.instance == null) {
@@ -47,5 +45,12 @@ public class AN5W3RBotApplication implements CommandLineRunner {
                 }
             }
         }, 1000, 5000);
+
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        },1000,5000);
     }
 }

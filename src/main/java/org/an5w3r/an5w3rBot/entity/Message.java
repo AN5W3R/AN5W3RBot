@@ -36,7 +36,6 @@ public class Message implements Serializable {
     @JSONField(name = "raw_message")
     private String rawMessage;
     private Integer font;
-    //private Sender sender;
     @JSONField(name = "message_id")
     private String messageId;
     @JSONField(name = "message_seq")

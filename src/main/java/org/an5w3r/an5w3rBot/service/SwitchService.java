@@ -15,6 +15,11 @@ public class SwitchService {
 
     static {
         functionList.add("翻译");
+        functionList.add("摇人");
+        functionList.add("加入");
+        functionList.add("退出");
+        functionList.add("解散");
+        functionList.add("开了");
     }
 
     public static void changeFunction(Message parseObject, String[] str) throws IOException {
