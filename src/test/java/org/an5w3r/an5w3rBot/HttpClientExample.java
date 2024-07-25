@@ -1,4 +1,4 @@
-package org.an5w3r.an5w3rBot.util;
+package org.an5w3r.an5w3rBot;
 
 import java.net.URI;
 import java.net.http.HttpClient;

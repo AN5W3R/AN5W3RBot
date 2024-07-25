@@ -40,10 +40,10 @@ public class MsgAction {
         Map<String, Object> params = new HashMap<>();
         params.put("detail_type",message.getMessageType());
         if("private".equals(message.getMessageType())){
-            logger.info("收到好友" + message.getUserId() + "的消息：" + rawMessage);
+            logger.info("\n向"+message.getUserId()+"发出消息"+itemList+"\n");
             params.put("user_id", message.getUserId());
         } else if("group".equals(message.getMessageType())){
-            logger.info("收到群" + message.getGroupId() + "的消息：" + rawMessage);
+            logger.info("\n向群"+message.getGroupId()+"发出消息"+itemList+"\n");
             params.put("group_id", message.getGroupId());
         } else {
             return;
@@ -56,7 +56,7 @@ public class MsgAction {
         paramsRequest.setAction("send_msg");
         paramsRequest.setParams(params);
 
-        logger.info("发出消息");
+
         String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
     }

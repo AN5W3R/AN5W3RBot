@@ -66,10 +66,14 @@ public class Client {
             Message message = JSONObject.parseObject(messageStr, Message.class);//JSON转换为对象
 
             if("private".equals(message.getMessageType())){//私聊信息
+                logger.info("\n收到好友[" + message.getSender().getNickname()
+                        + "]的消息：" + message.getRawMessage()+"\n");
                 MsgAction.sendMsg(message
                         ,new MsgItem(TextDao.getAtTextByMsg(message.getRawMessage())));
             }
             if ("group".equals(message.getMessageType())) {//群聊信息
+                logger.info("\n收到群" + message.getGroupId()+"-[" + message.getSender().getCard()
+                        + "]的消息：" + message.getRawMessage()+"\n");
 //                System.out.println(message.getSender());
 //                if (message.getSender().getUserId().equals("1542338612")){//小莫说话
 //                    MsgAction.deleteMsg(message);

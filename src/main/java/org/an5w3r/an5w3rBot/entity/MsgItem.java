@@ -29,4 +29,5 @@ public class MsgItem {
     public static MsgItem atItem(String QQ){
         return new MsgItem("at", "qq", QQ);
     }
+
 }
