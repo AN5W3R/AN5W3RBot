@@ -2,7 +2,6 @@ package org.an5w3r.an5w3rBot;
 
 import com.alibaba.fastjson.JSONObject;
 import jakarta.websocket.*;
-import org.an5w3r.an5w3rBot.action.GroupAction;
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.dao.ImageDao;
 import org.an5w3r.an5w3rBot.dao.TextDao;
@@ -17,11 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * 消息监听
@@ -64,7 +61,7 @@ public class Client {
 
     @OnMessage
     public void onMessage(String messageStr) throws IOException, ExecutionException, InterruptedException {
-//        System.out.println("\n"+message);
+//        System.out.println("\n"+messageStr);
         if (messageStr.contains("\"post_type\":\"message\"")) {//处理message信息
             Message message = JSONObject.parseObject(messageStr, Message.class);//JSON转换为对象
 
@@ -73,7 +70,8 @@ public class Client {
                         ,new MsgItem(TextDao.getAtTextByMsg(message.getRawMessage())));
             }
             if ("group".equals(message.getMessageType())) {//群聊信息
-//                if (message.getSender().get("user_id").equals("1542338612")){//小莫说话
+//                System.out.println(message.getSender());
+//                if (message.getSender().getUserId().equals("1542338612")){//小莫说话
 //                    MsgAction.deleteMsg(message);
 //                    GroupAction.setGroupCard(message,"笨蛋");
 //                    GroupAction.setGroupBan(message,1);
@@ -90,7 +88,7 @@ public class Client {
                         //功能管理
                         if(splitMsg[0].contains("功能管理")){
                             flag=false;
-                            if ("owner".equals(message.getSender().get("role"))||"admin".equals(message.getSender().get("role"))){
+                            if ("owner".equals(message.getSender().getRole())||"admin".equals(message.getSender().getRole())){
                                 SwitchService.changeFunction(message);
                             } else {
                                 MsgAction.sendMsg(message
@@ -159,7 +157,7 @@ public class Client {
                                         break;
                                     } else {
                                         MsgAction.sendMsg(message
-                                                ,MsgItem.atItem(message.getSender().get("user_id"))
+                                                ,MsgItem.atItem(message.getSender().getUserId())
                                                 ,new MsgItem(key+"功能已被关闭"));
                                         break;
                                     }
@@ -169,7 +167,7 @@ public class Client {
                         }
                     } else {
                         MsgAction.sendMsg(message
-                                ,MsgItem.atItem(message.getSender().get("user_id"))
+                                ,MsgItem.atItem(message.getSender().getUserId())
                                 ,new MsgItem(TextDao.getAtTextByMsg(message.getRawMessage())));
                     }
 

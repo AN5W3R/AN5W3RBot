@@ -27,7 +27,8 @@ public class Message implements Serializable {
     private String subType;
     @JSONField(name = "user_id")
     private String userId;
-    private Map<String,String> sender;
+//    private Map<String,String> sender;
+    private Sender sender;
     @JSONField(name = "group_id")
     private String groupId;
     @JSONField(name = "target_id")

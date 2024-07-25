@@ -26,7 +26,7 @@ public class SwitchService {
         String[] str = message.splitMsg();
         if (str.length != 3){
             MsgAction.sendMsg(message
-                    ,MsgItem.atItem(message.getSender().get("user_id"))
+                    ,MsgItem.atItem(message.getSender().getUserId())
                     ,new MsgItem("命令格式不正确\n正确格式为:\n"+ JSONUtil.getSettingMap().get("identifier")+"功能管理 功能名 开启/关闭"));
             return;
         }
@@ -39,7 +39,7 @@ public class SwitchService {
             }
         }else {
             MsgAction.sendMsg(message
-                    ,MsgItem.atItem(message.getSender().get("user_id"))
+                    ,MsgItem.atItem(message.getSender().getUserId())
                     ,new MsgItem("功能不存在"));
         }
     }
@@ -73,11 +73,11 @@ public class SwitchService {
 
         if (isFunctionOn(message,functionName)) {
             MsgAction.sendMsg(message
-                    ,MsgItem.atItem(message.getSender().get("user_id"))
+                    ,MsgItem.atItem(message.getSender().getUserId())
                     ,new MsgItem("功能已经是开启状态了"));
         } else {
             MsgAction.sendMsg(message
-                    ,MsgItem.atItem(message.getSender().get("user_id"))
+                    ,MsgItem.atItem(message.getSender().getUserId())
                     ,new MsgItem("功能已开启"));
             Setting.FunctionSwitch.get(groupId).remove(functionName);
         }
@@ -89,11 +89,11 @@ public class SwitchService {
 
         if (!isFunctionOn(message,functionName)) {
             MsgAction.sendMsg(message
-                    ,MsgItem.atItem(message.getSender().get("user_id"))
+                    ,MsgItem.atItem(message.getSender().getUserId())
                     ,new MsgItem("功能已经是关闭状态了"));
         } else {
             MsgAction.sendMsg(message
-                    ,MsgItem.atItem(message.getSender().get("user_id"))
+                    ,MsgItem.atItem(message.getSender().getUserId())
                     ,new MsgItem("功能已关闭"));
             Setting.FunctionSwitch.get(groupId).add(functionName);
         }

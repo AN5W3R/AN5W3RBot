@@ -15,12 +15,12 @@ public class Team {
     Integer maxCount;//最大人数
     //当前人数用List.size
     String text;//自定义文本
-    List<Map<String,String>> senderList;//队伍中人员的QQ号,用于@
+    List<Sender> senderList;//队伍中人员的QQ号,用于@
 
     public void go(){
         List<MsgItem> itemList = new ArrayList<>();
-        for (Map<String, String> sender : senderList) {
-            itemList.add(MsgItem.atItem(sender.get("user_id")));
+        for (Sender sender : senderList) {
+            itemList.add(MsgItem.atItem(sender.getUserId()));
         }
         itemList.add(new MsgItem("\n"+name+":"+text+"\n启动!!!"));
         MsgAction.sendMsg(message,itemList);
@@ -53,11 +53,11 @@ public class Team {
                 "\n备注:" +text+
                 "\n当前人数:" +senderList.size()+"/"+maxCount+
                 "\n人员名单:");
-        for (Map<String, String> sender : senderList) {
-            if (sender.get("card").isBlank()){
-                ret.append("\n"+sender.get("nickname"));
+        for (Sender sender : senderList) {
+            if (sender.getCard().isBlank()){
+                ret.append("\n"+sender.getNickname());
             } else {
-                ret.append("\n"+sender.get("card"));
+                ret.append("\n"+sender.getCard());
             }
         }
         return ret.toString();

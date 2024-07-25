@@ -3,6 +3,7 @@ package org.an5w3r.an5w3rBot.service;
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
+import org.an5w3r.an5w3rBot.entity.Sender;
 import org.an5w3r.an5w3rBot.entity.Team;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class GameTeamService {
 
 
         team.setText(splitMsg[3]);
-        List<Map<String,String>> senderList = new ArrayList<>();
+        List<Sender> senderList = new ArrayList<>();
         team.setSenderList(senderList);
         team.join(message);
 

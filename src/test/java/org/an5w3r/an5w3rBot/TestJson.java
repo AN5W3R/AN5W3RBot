@@ -3,15 +3,19 @@ package org.an5w3r.an5w3rBot;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import org.an5w3r.an5w3rBot.dao.TextDao;
+import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.entity.Request;
+import org.an5w3r.an5w3rBot.entity.Sender;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -146,5 +150,59 @@ public class TestJson {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Data
+    class Message implements Serializable {
+
+        @JSONField(name = "post_type")
+        private String postType;
+        @JSONField(name = "meta_event_type")
+        private String metaEventType;
+        @JSONField(name = "message_type")
+        private String messageType;
+        @JSONField(name = "notice_type")
+        private String noticeType;
+        // 操作人id 比如群管理员a踢了一个人,那么该值为a的qq号
+        @JSONField(name = "operator_id")
+        private String operatorId;
+        private Long time;
+        @JSONField(name = "self_id")
+        private String selfId;
+        @JSONField(name = "sub_type")
+        private String subType;
+        @JSONField(name = "user_id")
+        private String userId;
+        //    private Map<String,String> sender;
+        private Sender sender;
+        @JSONField(name = "group_id")
+        private String groupId;
+        @JSONField(name = "target_id")
+        private String targetId;
+        private String message;
+        @JSONField(name = "raw_message")
+        private String rawMessage;
+        private Integer font;
+        @JSONField(name = "message_id")
+        private String messageId;
+        @JSONField(name = "message_seq")
+        private Integer messageSeq;
+        private String anonymous;
+
+        public String[] splitMsg(){
+            String[] msgStr = getRawMessage().split("-");
+            return msgStr;
+        }
+        public String atMsg(){
+            String replace = rawMessage.replace("[CQ:at,qq=" + selfId + "]", "");
+            return replace;
+        }
+    }
+    @Test
+    public void testNewMessage(){
+        String messageStr = "{\"self_id\":3363590760,\"user_id\":2044284028,\"time\":1721870394,\"message_id\":-2147475511,\"real_id\":-2147475511,\"message_seq\":-2147475511,\"message_type\":\"group\",\"sender\":{\"user_id\":2044284028,\"nickname\":\"AN5W3R_\",\"card\":\"你好\",\"role\":\"owner\"},\"raw_message\":\"1\",\"font\":14,\"sub_type\":\"normal\",\"message\":[{\"data\":{\"text\":\"1\"},\"type\":\"text\"}],\"message_format\":\"array\",\"post_type\":\"message\",\"group_id\":758025242}";
+        Message message = JSONObject.parseObject(messageStr, Message.class);//JSON转换为对象
+        System.out.println(message.sender);
     }
 }
