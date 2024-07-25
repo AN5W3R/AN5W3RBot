@@ -69,7 +69,7 @@ public class Client {
                 logger.info("\n收到好友[" + message.getSender().getNickname()
                         + "]的消息：" + message.getRawMessage()+"\n");
                 MsgAction.sendMsg(message
-                        ,new MsgItem(TextDao.getAtTextByMsg(message.getRawMessage())));
+                        ,new MsgItem(TextDao.getAtTextByMsg(message.atMsg())));
             }
             if ("group".equals(message.getMessageType())) {//群聊信息
                 logger.info("\n收到群" + message.getGroupId()+"-[" + message.getSender().getCard()
@@ -82,7 +82,8 @@ public class Client {
 //                }
 
 
-                if(message.getRawMessage().contains("[CQ:at,qq="+message.getSelfId()+"]")){//被@
+                if(message.getRawMessage().contains("[CQ:at,qq="+message.getSelfId()+"]")){
+                    //被@
 
 //                    message.getRawMessage().replace("[CQ:at,qq="+message.getSelfId()+"]","");
                     if(message.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
@@ -172,7 +173,7 @@ public class Client {
                     } else {
                         MsgAction.sendMsg(message
                                 ,MsgItem.atItem(message.getSender().getUserId())
-                                ,new MsgItem(TextDao.getAtTextByMsg(message.getRawMessage())));
+                                ,new MsgItem(TextDao.getAtTextByMsg(message.atMsg())));
                     }
 
                 }else {//无@对话

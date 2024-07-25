@@ -30,8 +30,7 @@ public class TextDao {
             }
         }
 
-        String encodedString = URLEncoder.encode(in, StandardCharsets.UTF_8);
-        return TextUtil.getAiMsg(encodedString);
+        return TextUtil.getGoogleText(in);
     }
     public static String getNotAtTextByMsg(String in) throws IOException {
         Map<String, String[]> TextJsonMap = JSONUtil.getNotAtTextMap();
@@ -45,8 +44,7 @@ public class TextDao {
             }
         }
 
-        String encodedString = URLEncoder.encode(in, StandardCharsets.UTF_8);
-        return TextUtil.getAiMsg(encodedString);
+        return TextUtil.getGoogleText(in);
     }
     //翻译功能
     public static String getTranslation(Message message){

@@ -201,8 +201,9 @@ public class TestJson {
     }
     @Test
     public void testNewMessage(){
-        String messageStr = "{\"self_id\":3363590760,\"user_id\":2044284028,\"time\":1721870394,\"message_id\":-2147475511,\"real_id\":-2147475511,\"message_seq\":-2147475511,\"message_type\":\"group\",\"sender\":{\"user_id\":2044284028,\"nickname\":\"AN5W3R_\",\"card\":\"你好\",\"role\":\"owner\"},\"raw_message\":\"1\",\"font\":14,\"sub_type\":\"normal\",\"message\":[{\"data\":{\"text\":\"1\"},\"type\":\"text\"}],\"message_format\":\"array\",\"post_type\":\"message\",\"group_id\":758025242}";
-        Message message = JSONObject.parseObject(messageStr, Message.class);//JSON转换为对象
-        System.out.println(message.sender);
+//        String messageStr = "{\"self_id\":3363590760,\"user_id\":2044284028,\"time\":1721870394,\"message_id\":-2147475511,\"real_id\":-2147475511,\"message_seq\":-2147475511,\"message_type\":\"group\",\"sender\":{\"user_id\":2044284028,\"nickname\":\"AN5W3R_\",\"card\":\"你好\",\"role\":\"owner\"},\"raw_message\":\"1\",\"font\":14,\"sub_type\":\"normal\",\"message\":[{\"data\":{\"text\":\"1\"},\"type\":\"text\"}],\"message_format\":\"array\",\"post_type\":\"message\",\"group_id\":758025242}";
+//        Message message = JSONObject.parseObject(messageStr, Message.class);//JSON转换为对象
+//        System.out.println(message.sender);
+//        JSONUtil.getGoogleModel();
     }
 }

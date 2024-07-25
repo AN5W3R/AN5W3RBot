@@ -1,6 +1,7 @@
 package org.an5w3r.an5w3rBot.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,5 +95,22 @@ public class JSONUtil {
         }
         logger.info("文件路径不正确");
         return null;
+    }
+    public static String getGoogleModel(){
+        String ret = null;
+        try {
+            // 读取文件内容为字符串
+            String content = new String(Files.readAllBytes(Paths.get(getSettingMap().get("googleModel"))));
+
+            // 将字符串解析为 JSON 对象
+            JSONObject jsonObject = JSON.parseObject(content);
+
+            // 输出 JSON 对象
+//            System.out.println(jsonObject.toJSONString());
+            ret = jsonObject.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 }
