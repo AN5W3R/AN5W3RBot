@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 public class Team {
     String name;//队伍名称
-    Message parseObject;//组建信息
+    Message message;//组建信息
     Integer maxCount;//最大人数
     //当前人数用List.size
     String text;//自定义文本
@@ -23,23 +23,26 @@ public class Team {
             itemList.add(MsgItem.atItem(sender.get("user_id")));
         }
         itemList.add(new MsgItem("\n"+name+":"+text+"\n启动!!!"));
-        MsgAction.sendMsg(parseObject,itemList);
+        MsgAction.sendMsg(message,itemList);
     }
 
-    public void join(Message parseObject) throws IOException {
-        if (senderList.contains(parseObject.getSender())) {
-            MsgAction.sendMsg(parseObject,new MsgItem("已在队伍中"));
+    public void join(Message message) throws IOException {
+        if (senderList.contains(message.getSender())) {
+            MsgAction.sendMsg(message,new MsgItem("已在队伍中"));
             return;
         }
-        MsgAction.sendMsg(parseObject, new MsgItem("加入队伍成功"));
-        senderList.add(parseObject.getSender());
+        senderList.add(message.getSender());
+        if (senderList.size()>1){
+            MsgAction.sendMsg(message, new MsgItem("加入队伍成功"));
+        }
+
     }
-    public void leave(Message parseObject) throws IOException {
-        if (senderList.contains(parseObject.getSender())){
-            senderList.remove(parseObject.getSender());
-            MsgAction.sendMsg(parseObject,new MsgItem("退出队伍成功"));
+    public void leave(Message message) throws IOException {
+        if (senderList.contains(message.getSender())){
+            senderList.remove(message.getSender());
+            MsgAction.sendMsg(message,new MsgItem("退出队伍成功"));
         } else {//不在队伍中
-            MsgAction.sendMsg(parseObject,new MsgItem("不在队伍中"));
+            MsgAction.sendMsg(message,new MsgItem("不在队伍中"));
         }
     }
 
@@ -47,14 +50,14 @@ public class Team {
     public String toString() {
         StringBuffer ret = new StringBuffer(
                 "队伍名称:"+name+
-                "\n当前人数:" +senderList.size()+"/"+maxCount+
                 "\n备注:" +text+
-                "\n人员名单:\n");
+                "\n当前人数:" +senderList.size()+"/"+maxCount+
+                "\n人员名单:");
         for (Map<String, String> sender : senderList) {
             if (sender.get("card").isBlank()){
-                ret.append(sender.get("nickname")+"\n");
+                ret.append("\n"+sender.get("nickname"));
             } else {
-                ret.append(sender.get("card")+"\n");
+                ret.append("\n"+sender.get("card"));
             }
         }
         return ret.toString();

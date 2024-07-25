@@ -15,30 +15,31 @@ public class SwitchService {
 
     static {
         functionList.add("翻译");
-        functionList.add("摇人");
+        functionList.add("创建");
         functionList.add("加入");
         functionList.add("退出");
         functionList.add("解散");
         functionList.add("开了");
     }
 
-    public static void changeFunction(Message parseObject, String[] str) throws IOException {
+    public static void changeFunction(Message message) throws IOException {
+        String[] str = message.splitMsg();
         if (str.length != 3){
-            MsgAction.sendMsg(parseObject
-                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+            MsgAction.sendMsg(message
+                    ,MsgItem.atItem(message.getSender().get("user_id"))
                     ,new MsgItem("命令格式不正确\n正确格式为:\n"+ JSONUtil.getSettingMap().get("identifier")+"功能管理 功能名 开启/关闭"));
             return;
         }
 
         if (isFunction(str[1])) {
             if("开启".equals(str[2])){
-                openFunction(parseObject,str[1]);
+                openFunction(message,str[1]);
             } else if ("关闭".equals(str[2])) {
-                closeFunction(parseObject,str[1]);
+                closeFunction(message,str[1]);
             }
         }else {
-            MsgAction.sendMsg(parseObject
-                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+            MsgAction.sendMsg(message
+                    ,MsgItem.atItem(message.getSender().get("user_id"))
                     ,new MsgItem("功能不存在"));
         }
     }
@@ -50,8 +51,8 @@ public class SwitchService {
         return functionList.contains(functionName);
     }
 
-    public static boolean isFunctionOn(Message parseObject, String functionName) throws IOException {
-        String groupId = parseObject.getGroupId();
+    public static boolean isFunctionOn(Message message, String functionName) throws IOException {
+        String groupId = message.getGroupId();
 
         if (Setting.FunctionSwitch.containsKey(groupId)) {//判断Map中是否存在群号
             List<String> groupOffFunctions = Setting.FunctionSwitch.get(groupId);
@@ -67,32 +68,32 @@ public class SwitchService {
 
     }
 
-    public static void openFunction(Message parseObject, String functionName) throws IOException {
-        String groupId = parseObject.getGroupId();
+    public static void openFunction(Message message, String functionName) throws IOException {
+        String groupId = message.getGroupId();
 
-        if (isFunctionOn(parseObject,functionName)) {
-            MsgAction.sendMsg(parseObject
-                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+        if (isFunctionOn(message,functionName)) {
+            MsgAction.sendMsg(message
+                    ,MsgItem.atItem(message.getSender().get("user_id"))
                     ,new MsgItem("功能已经是开启状态了"));
         } else {
-            MsgAction.sendMsg(parseObject
-                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+            MsgAction.sendMsg(message
+                    ,MsgItem.atItem(message.getSender().get("user_id"))
                     ,new MsgItem("功能已开启"));
             Setting.FunctionSwitch.get(groupId).remove(functionName);
         }
 
     }
 
-    public static void closeFunction(Message parseObject, String functionName) throws IOException {
-        String groupId = parseObject.getGroupId();
+    public static void closeFunction(Message message, String functionName) throws IOException {
+        String groupId = message.getGroupId();
 
-        if (!isFunctionOn(parseObject,functionName)) {
-            MsgAction.sendMsg(parseObject
-                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+        if (!isFunctionOn(message,functionName)) {
+            MsgAction.sendMsg(message
+                    ,MsgItem.atItem(message.getSender().get("user_id"))
                     ,new MsgItem("功能已经是关闭状态了"));
         } else {
-            MsgAction.sendMsg(parseObject
-                    ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+            MsgAction.sendMsg(message
+                    ,MsgItem.atItem(message.getSender().get("user_id"))
                     ,new MsgItem("功能已关闭"));
             Setting.FunctionSwitch.get(groupId).add(functionName);
         }

@@ -2,6 +2,7 @@ package org.an5w3r.an5w3rBot.dao;
 
 import org.an5w3r.an5w3rBot.Client;
 import org.an5w3r.an5w3rBot.entity.Image;
+import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.an5w3r.an5w3rBot.util.TextUtil;
@@ -18,8 +19,8 @@ public class TextDao {
     private static final Logger logger = LoggerFactory.getLogger(TextDao.class);
 
     //接收一个参数,来源聊天
-    public static String getTextByMsg(String in) throws IOException {
-        Map<String, String[]> TextJsonMap = JSONUtil.getTextMap();
+    public static String getAtTextByMsg(String in) throws IOException {
+        Map<String, String[]> TextJsonMap = JSONUtil.getAtTextMap();
         for (String s : TextJsonMap.keySet()) {
             if (in.contains(s)) {
                 String[] value = TextJsonMap.get(s);
@@ -32,10 +33,24 @@ public class TextDao {
         String encodedString = URLEncoder.encode(in, StandardCharsets.UTF_8);
         return TextUtil.getAiMsg(encodedString);
     }
+    public static String getNotAtTextByMsg(String in) throws IOException {
+        Map<String, String[]> TextJsonMap = JSONUtil.getNotAtTextMap();
+        assert TextJsonMap != null;
+        for (String s : TextJsonMap.keySet()) {
+            if (in.contains(s)) {
+                String[] value = TextJsonMap.get(s);
+                Random r = new Random();//util.Random
+                int index =r.nextInt(value.length);
+                return value[index];
+            }
+        }
 
-    //接收一个字符串数组,1到4歌参数,其中第一个参数无效,来源聊天输入或者外部
-    //TODO 优化掉第一个参数
-    public static String getTranslation(String[] str){
+        String encodedString = URLEncoder.encode(in, StandardCharsets.UTF_8);
+        return TextUtil.getAiMsg(encodedString);
+    }
+    //翻译功能
+    public static String getTranslation(Message message){
+        String[] str = message.splitMsg();
         if (str.length == 1){
             return "请输入待翻译文本";
         }

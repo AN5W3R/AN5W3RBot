@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -62,76 +63,80 @@ public class Client {
     }
 
     @OnMessage
-    public void onMessage(String message) throws IOException, ExecutionException, InterruptedException {
+    public void onMessage(String messageStr) throws IOException, ExecutionException, InterruptedException {
 //        System.out.println("\n"+message);
-        if (message.contains("\"post_type\":\"message\"")) {//处理message信息
-            Message parseObject = JSONObject.parseObject(message, Message.class);//JSON转换为对象
+        if (messageStr.contains("\"post_type\":\"message\"")) {//处理message信息
+            Message message = JSONObject.parseObject(messageStr, Message.class);//JSON转换为对象
 
-            if("private".equals(parseObject.getMessageType())){//私聊信息
-                MsgAction.sendMsg(parseObject
-                        ,new MsgItem(TextDao.getTextByMsg(message)));
+            if("private".equals(message.getMessageType())){//私聊信息
+                MsgAction.sendMsg(message
+                        ,new MsgItem(TextDao.getAtTextByMsg(message.getRawMessage())));
             }
-            if ("group".equals(parseObject.getMessageType())) {//群聊信息
-//                if (parseObject.getSender().get("user_id").equals("1542338612")){//小莫说话
-//                    MsgAction.deleteMsg(parseObject);
-//                    GroupAction.setGroupCard(parseObject,"笨蛋");
-//                    GroupAction.setGroupBan(parseObject,1);
+            if ("group".equals(message.getMessageType())) {//群聊信息
+//                if (message.getSender().get("user_id").equals("1542338612")){//小莫说话
+//                    MsgAction.deleteMsg(message);
+//                    GroupAction.setGroupCard(message,"笨蛋");
+//                    GroupAction.setGroupBan(message,1);
 //                }
 
-                if(parseObject.getRawMessage().contains("[CQ:at,qq="+parseObject.getSelfId()+"]")){//被@
-                    if(parseObject.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
-                        boolean flag = true;
-                        String[] msgStr = parseObject.getRawMessage().split("-");
 
+                if(message.getRawMessage().contains("[CQ:at,qq="+message.getSelfId()+"]")){//被@
+
+//                    message.getRawMessage().replace("[CQ:at,qq="+message.getSelfId()+"]","");
+                    if(message.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
+                        boolean flag = true;
+//                        String[] msgStr = message.getRawMessage().split("-");
+                        String[] splitMsg = message.splitMsg();
                         //功能管理
-                        if(msgStr[0].contains("功能管理")){
+                        if(splitMsg[0].contains("功能管理")){
                             flag=false;
-                            if ("owner".equals(parseObject.getSender().get("role"))||"admin".equals(parseObject.getSender().get("role"))){
-                                SwitchService.changeFunction(parseObject, msgStr);
+                            if ("owner".equals(message.getSender().get("role"))||"admin".equals(message.getSender().get("role"))){
+                                SwitchService.changeFunction(message);
                             } else {
-                                MsgAction.sendMsg(parseObject
-                                        ,MsgItem.atItem(parseObject.getUserId())
+                                MsgAction.sendMsg(message
+                                        ,MsgItem.atItem(message.getUserId())
                                         ,new MsgItem("你没有管理员权限"));
                             }
                         }
+
                         //TODO 把功能包装成类,input:拆分后的msgStr,msgStr[0]为功能名称
                         //内置功能系统
                         if(flag){
                             for (String key : SwitchService.functionList) {//查找功能列表中是否有此功能
-                                if (msgStr[0].contains(key)) {
+                                if (splitMsg[0].contains(key)) {
                                     flag=false;
-                                    if (SwitchService.isFunctionOn(parseObject,key)) {
+                                    if (SwitchService.isFunctionOn(message,key)) {
                                         switch (key){//功能列表
                                             case "翻译":{
-                                                MsgAction.sendMsg(parseObject
-                                                        ,MsgItem.atItem(parseObject.getUserId())
-                                                        ,new MsgItem(TextDao.getTranslation(msgStr)));
+                                                MsgAction.sendMsg(message
+                                                        ,MsgItem.atItem(message.getUserId())
+                                                        ,new MsgItem(TextDao.getTranslation(message)));
                                                 break;
                                             }
-                                            case "摇人":{
-                                                GameTeamService.addTeam(parseObject,msgStr);
+                                            case "创建":{
+                                                GameTeamService.addTeam(message);
                                                 break;
                                             }
                                             case "加入":{
-                                                GameTeamService.joinTeam(parseObject,msgStr);
+                                                GameTeamService.joinTeam(message);
                                                 break;
                                             }
                                             case "退出":{
-                                                GameTeamService.leaveTeam(parseObject,msgStr);
+                                                GameTeamService.leaveTeam(message);
                                                 break;
                                             }
                                             case "解散":{
-                                                GameTeamService.removeTeam(parseObject,msgStr);
+                                                GameTeamService.removeTeam(message);
                                                 break;
                                             }
                                             case "开了":{
-                                                GameTeamService.playTeam(parseObject,msgStr);
+                                                GameTeamService.playTeam(message);
                                                 break;
                                             }
                                         }
                                     } else {
-                                        MsgAction.sendMsg(parseObject
-                                                ,MsgItem.atItem(parseObject.getUserId())
+                                        MsgAction.sendMsg(message
+                                                ,MsgItem.atItem(message.getUserId())
                                                 ,new MsgItem(key+"功能已被关闭"));
                                     }
 
@@ -143,18 +148,18 @@ public class Client {
                             //TODO 更新图库功能
                             Map<String, String> imageFunctionMap = JSONUtil.getImageSrcMap();
                             for (String key : imageFunctionMap.keySet()) {//查找图库功能列表
-                                if (msgStr[0].contains(key)) {
-                                    if (SwitchService.isFunctionOn(parseObject,key)) {
+                                if (splitMsg[0].contains(key)) {
+                                    if (SwitchService.isFunctionOn(message,key)) {
                                         Image image = ImageDao.getImageByMsg(key);
-                                        MsgAction.sendMsg(parseObject
-                                                ,MsgItem.atItem(parseObject.getUserId())
+                                        MsgAction.sendMsg(message
+                                                ,MsgItem.atItem(message.getUserId())
                                                 ,new MsgItem("image","file", image.getFile())
                                                 ,new MsgItem(image.getText())
                                         );//参数即是功能名
                                         break;
                                     } else {
-                                        MsgAction.sendMsg(parseObject
-                                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
+                                        MsgAction.sendMsg(message
+                                                ,MsgItem.atItem(message.getSender().get("user_id"))
                                                 ,new MsgItem(key+"功能已被关闭"));
                                         break;
                                     }
@@ -163,12 +168,21 @@ public class Client {
                             }
                         }
                     } else {
-                        MsgAction.sendMsg(parseObject
-                                ,MsgItem.atItem(parseObject.getSender().get("user_id"))
-                                ,new MsgItem(TextDao.getTextByMsg(message)));
+                        MsgAction.sendMsg(message
+                                ,MsgItem.atItem(message.getSender().get("user_id"))
+                                ,new MsgItem(TextDao.getAtTextByMsg(message.getRawMessage())));
                     }
 
+                }else {//无@对话
+                    Map<String, String[]> map = JSONUtil.getNotAtTextMap();
+                    Set<String> keys = map.keySet();
+                    for (String key : keys) {//先判断在notAtTextMap中是否有key
+                        if (message.getRawMessage().contains(key)) {
+                            MsgAction.sendMsg(message,new MsgItem(TextDao.getNotAtTextByMsg(key)));
+                        }
+                    }
                 }
+
             }
         }
     }

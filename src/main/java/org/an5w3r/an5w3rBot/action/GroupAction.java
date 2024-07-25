@@ -13,12 +13,12 @@ import java.util.Map;
 public class GroupAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
 
-    public synchronized static void setGroupCard(Message parseObject,String card){
+    public synchronized static void setGroupCard(Message message,String card){
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("set_group_card");
         Map<String,String> map = new HashMap<>();
-        map.put("group_id",parseObject.getGroupId());
-        map.put("user_id",parseObject.getUserId());
+        map.put("group_id",message.getGroupId());
+        map.put("user_id",message.getUserId());
         map.put("card",card);
         paramsRequest.setParams(map);
 
@@ -27,12 +27,12 @@ public class GroupAction {
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
     }
 
-    public synchronized static void setGroupBan(Message parseObject,int duration){
+    public synchronized static void setGroupBan(Message message,int duration){
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("set_group_ban");
         Map<String,Object> map = new HashMap<>();
-        map.put("group_id",parseObject.getGroupId());
-        map.put("user_id",parseObject.getUserId());
+        map.put("group_id",message.getGroupId());
+        map.put("user_id",message.getUserId());
         map.put("duration",duration);
         paramsRequest.setParams(map);
 

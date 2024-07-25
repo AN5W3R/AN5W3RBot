@@ -41,4 +41,13 @@ public class Message implements Serializable {
     @JSONField(name = "message_seq")
     private Integer messageSeq;
     private String anonymous;
+
+    public String[] splitMsg(){
+        String[] msgStr = getRawMessage().split("-");
+        return msgStr;
+    }
+    public String atMsg(){
+        String replace = rawMessage.replace("[CQ:at,qq=" + selfId + "]", "");
+        return replace;
+    }
 }
