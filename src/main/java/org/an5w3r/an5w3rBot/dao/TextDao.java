@@ -19,7 +19,8 @@ public class TextDao {
     private static final Logger logger = LoggerFactory.getLogger(TextDao.class);
 
     //接收一个参数,来源聊天
-    public static String getAtTextByMsg(String in) throws IOException {
+    public static String getAtTextByMsg(Message message) throws IOException {
+        String in = message.atMsg();
         Map<String, String[]> TextJsonMap = JSONUtil.getAtTextMap();
         for (String s : TextJsonMap.keySet()) {
             if (in.contains(s)) {
@@ -30,9 +31,9 @@ public class TextDao {
             }
         }
 
-        return TextUtil.getGoogleText(in);
+        return TextUtil.getGoogleText(message);
     }
-    public static String getNotAtTextByMsg(String in) throws IOException {
+    public static String getNotAtTextByMsg(String in) throws IOException {//无@关键词
         Map<String, String[]> TextJsonMap = JSONUtil.getNotAtTextMap();
         assert TextJsonMap != null;
         for (String s : TextJsonMap.keySet()) {
@@ -44,7 +45,7 @@ public class TextDao {
             }
         }
 
-        return TextUtil.getGoogleText(in);
+        return null;
     }
     //翻译功能
     public static String getTranslation(Message message){

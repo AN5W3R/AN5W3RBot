@@ -71,7 +71,7 @@ public class Client {
                 logger.info("\n收到好友[" + message.getSender().getNickname()
                         + "]的消息：" + message.getRawMessage()+"\n");
                 MsgAction.sendMsg(message
-                        ,new MsgItem(TextDao.getAtTextByMsg(message.atMsg())));
+                        ,new MsgItem(TextDao.getAtTextByMsg(message)));
             }
             if ("group".equals(message.getMessageType())) {//群聊信息
                 logger.info("\n收到群" + message.getGroupId()+"-[" + message.getSender().getCard()
@@ -175,11 +175,12 @@ public class Client {
                     } else {
                         MsgAction.sendMsg(message
                                 ,MsgItem.atItem(message.getSender().getUserId())
-                                ,new MsgItem(TextDao.getAtTextByMsg(message.atMsg())));
+                                ,new MsgItem(TextDao.getAtTextByMsg(message)));
                     }
 
                 }else {//无@对话
                     Map<String, String[]> map = JSONUtil.getNotAtTextMap();
+
                     Set<String> keys = map.keySet();
                     for (String key : keys) {//先判断在notAtTextMap中是否有符合key正则表达式
                         String noAtMsg = message.atMsg();

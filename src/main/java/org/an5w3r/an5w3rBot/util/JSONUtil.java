@@ -1,6 +1,7 @@
 package org.an5w3r.an5w3rBot.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class JSONUtil {
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
         Path path = Paths.get("setting.json");
+
         if (new File(path.toString()).exists()){
             // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
             byte[] bytes = Files.readAllBytes(path);
@@ -30,13 +32,13 @@ public class JSONUtil {
 
             return resultMap;
         }
-        logger.info("文件路径不正确");
+        logger.warn("文件路径不正确");
         return null;
     }
     public static Map<String, String[]> getAtTextMap() throws IOException {//修改为getJson
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
-        Path path = Paths.get(getSettingMap().get("AtMessageSrc"));
+        Path path = Paths.get(getSettingMap().get("AtMessage"));
         if (new File(path.toString()).exists()){
             // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
             byte[] bytes = Files.readAllBytes(path);
@@ -46,23 +48,24 @@ public class JSONUtil {
 
             return resultMap;
         }
-        logger.info("文件路径不正确");
+        logger.warn("文件路径不正确");
         return null;
     }
-    public static Map<String, String[]> getNotAtTextMap() throws IOException {//修改为getJson
+    public static Map<String, String[]> getNotAtTextMap() throws IOException {
         String jsonStr = null;
+
         // 创建一个 Path 对象，表示要读取的文件路径
-        Path path = Paths.get(getSettingMap().get("NotAtMessageSrc"));
+        Path path = Paths.get(getSettingMap().get("NotAtMessage"));
         if (new File(path.toString()).exists()){
             // 使用 Charset 类的 forName 方法，指定字符编码为 UTF-8，并将 byte 数组转换为字符串
+
             byte[] bytes = Files.readAllBytes(path);
             jsonStr = new String(bytes, Charset.forName("UTF-8"));
-
             Map<String, String[]> resultMap = JSON.parseObject(jsonStr, new TypeReference<Map<String, String[]>>() {}.getType());
 
             return resultMap;
         }
-        logger.info("文件路径不正确");
+        logger.warn("文件路径不正确");
         return null;
     }
     public static Map<String, String[]> getImageTextMap(String src) throws IOException {//修改为getJson
@@ -78,7 +81,7 @@ public class JSONUtil {
 
             return resultMap;
         }
-        logger.info("文件路径不正确");
+        logger.warn("文件路径不正确");
         return null;
     }
     public static Map<String,String> getImageSrcMap() throws IOException {//获取图库路径
@@ -94,10 +97,10 @@ public class JSONUtil {
 
             return resultMap;
         }
-        logger.info("文件路径不正确");
+        logger.warn("文件路径不正确");
         return null;
     }
-    public static String getGoogleModel(){
+    public static String getBaseGoogleModel(){
         String ret = null;
         try {
             // 读取文件内容为字符串
@@ -113,5 +116,25 @@ public class JSONUtil {
            logger.warn("找不到模型文件");
         }
         return ret;
+    }
+    public static String addContent(String jsonString,String role,String text){
+        JSONObject jsonObject = JSON.parseObject(jsonString);
+
+        // 创建新的消息
+        JSONObject newMessage = new JSONObject();
+        newMessage.put("role", role);
+        JSONArray partsArray = new JSONArray();
+        JSONObject part = new JSONObject();
+        part.put("text", text);
+        partsArray.add(part);
+        newMessage.put("parts", partsArray);
+
+        // 将新消息插入到 JSON 中
+        JSONArray contentsArray = jsonObject.getJSONArray("contents");
+        int insertPosition = contentsArray.size() - 1; // 倒数第二个位置
+        contentsArray.add(insertPosition, newMessage);
+
+        // 输出更新后的 JSON
+        return jsonObject.toJSONString();
     }
 }
