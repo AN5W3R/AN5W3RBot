@@ -2,6 +2,7 @@ package org.an5w3r.an5w3rBot;
 
 import com.alibaba.fastjson.JSONObject;
 import jakarta.websocket.*;
+import org.an5w3r.an5w3rBot.action.GroupAction;
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.dao.ImageDao;
 import org.an5w3r.an5w3rBot.dao.TextDao;
@@ -19,6 +20,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 /**
  * 消息监听
@@ -75,15 +77,15 @@ public class Client {
                 logger.info("\n收到群" + message.getGroupId()+"-[" + message.getSender().getCard()
                         + "]的消息：" + message.getRawMessage()+"\n");
 //                System.out.println(message.getSender());
-//                if (message.getSender().getUserId().equals("1542338612")){//小莫说话
+//                if (message.getSender().getUserId().equals("2468794766")){//小莫说话
 //                    MsgAction.deleteMsg(message);
-//                    GroupAction.setGroupCard(message,"笨蛋");
+//                    GroupAction.setGroupCard(message,"");
 //                    GroupAction.setGroupBan(message,1);
 //                }
 
-
+                //被@
                 if(message.getRawMessage().contains("[CQ:at,qq="+message.getSelfId()+"]")){
-                    //被@
+
 
 //                    message.getRawMessage().replace("[CQ:at,qq="+message.getSelfId()+"]","");
                     if(message.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))){ //调用功能
@@ -179,10 +181,18 @@ public class Client {
                 }else {//无@对话
                     Map<String, String[]> map = JSONUtil.getNotAtTextMap();
                     Set<String> keys = map.keySet();
-                    for (String key : keys) {//先判断在notAtTextMap中是否有key
-                        if (message.getRawMessage().contains(key)) {
+                    for (String key : keys) {//先判断在notAtTextMap中是否有符合key正则表达式
+                        String noAtMsg = message.atMsg();
+                        if (Pattern.matches(key,noAtMsg)) {
                             MsgAction.sendMsg(message,new MsgItem(TextDao.getNotAtTextByMsg(key)));
+                            MsgAction.deleteMsg(message);
+//                            GroupAction.setGroupCard(message,"");
+                            GroupAction.setGroupBan(message,1);
+                            break;
                         }
+//                        if (message.getRawMessage().contains(key)) {
+//                            MsgAction.sendMsg(message,new MsgItem(TextDao.getNotAtTextByMsg(key)));
+//                        }
                     }
                 }
 

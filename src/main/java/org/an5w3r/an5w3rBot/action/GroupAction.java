@@ -36,7 +36,7 @@ public class GroupAction {
         map.put("duration",duration);
         paramsRequest.setParams(map);
 
-        logger.info("更改群名片");
+        logger.info("禁言");
         String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
     }

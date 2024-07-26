@@ -21,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TestJson {
@@ -206,4 +208,14 @@ public class TestJson {
 //        System.out.println(message.sender);
 //        JSONUtil.getGoogleModel();
     }
+
+    @Test
+    public  void testPattern() {
+        String pattern = "包.*的";
+        String input = "包输的";
+
+        boolean matches = Pattern.matches(pattern, input);
+        System.out.println("是否匹配: " + matches);
+    }
+
 }

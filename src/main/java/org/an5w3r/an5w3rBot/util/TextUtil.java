@@ -39,7 +39,7 @@ import java.util.Random;
 
 public class TextUtil {
     private static final Logger logger = LoggerFactory.getLogger(TextUtil.class);
-    //TODO 更换API
+
     public static String getAiMsg(String sendMsg) {
         try {
             HttpGet httpGet = new HttpGet("http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + sendMsg);
@@ -57,10 +57,11 @@ public class TextUtil {
     }
     public static String getGoogleText(String sendMsg){
         try {
+            logger.info("正在获取Google聊天信息");
             // 设置超时和代理
             RequestConfig requestConfig = RequestConfig.custom()
-                    .setConnectTimeout(5000)
-                    .setSocketTimeout(10000)
+                    .setConnectTimeout(10000)
+                    .setSocketTimeout(15000)
                     .build();
             HttpHost proxy = new HttpHost("localhost", Integer.parseInt(JSONUtil.getSettingMap().get("proxyPort")));
             DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
@@ -102,28 +103,53 @@ public class TextUtil {
             }
 
             // 打印响应内容
-            System.out.println(result);
+//            System.out.println(result);
             String text = TextUtil.googleAiResponseText(result.toString());
+            //清理换行符
+            text = text.replaceAll("\\\\n", "").replaceAll("\\n", "");
+
             return text;
         } catch (Exception e) {
-            e.printStackTrace();
+            return "请求超时了";
         }
-        return "出了点小问题";
     }
 
     public static String googleAiResponseText(String jsonResponse) {
-        //将googleResponse的Text提取出来
-
+        // 将googleResponse的Text提取出来
         JSONObject jsonObject = JSON.parseObject(jsonResponse);
         JSONArray candidates = jsonObject.getJSONArray("candidates");
-        JSONObject firstCandidate = candidates.getJSONObject(0);
-        JSONObject content = firstCandidate.getJSONObject("content");
-        JSONArray parts = content.getJSONArray("parts");
-        JSONObject firstPart = parts.getJSONObject(0);
-        String text = firstPart.getString("text");
+        if (candidates != null && !candidates.isEmpty()) {
+            JSONObject firstCandidate = candidates.getJSONObject(0);
+            JSONObject content = firstCandidate.getJSONObject("content");
+            if (content != null) {
+                JSONArray parts = content.getJSONArray("parts");
+                if (parts != null && !parts.isEmpty()) {
+                    JSONObject firstPart = parts.getJSONObject(0);
+                    String text = firstPart.getString("text");
+                    if (text != null && !text.isEmpty()) {
+                        return text;
+                    }
+                }
+            }
+        }
 
-        return text;
+        // 如果text字段为空或不存在，尝试获取message字段
+        String message = jsonObject.getString("message");
+        return message != null ? message : "出了一点小问题,可能是存在systemInstructions参数";
     }
+//    public static String googleAiResponseText(String jsonResponse) {
+//        //将googleResponse的Text提取出来
+//
+//        JSONObject jsonObject = JSON.parseObject(jsonResponse);
+//        JSONArray candidates = jsonObject.getJSONArray("candidates");
+//        JSONObject firstCandidate = candidates.getJSONObject(0);
+//        JSONObject content = firstCandidate.getJSONObject("content");
+//        JSONArray parts = content.getJSONArray("parts");
+//        JSONObject firstPart = parts.getJSONObject(0);
+//        String text = firstPart.getString("text");
+//
+//        return text;
+//    }
 
     public static String getTranslation(String text, String sourceLang, String targetLang){
 

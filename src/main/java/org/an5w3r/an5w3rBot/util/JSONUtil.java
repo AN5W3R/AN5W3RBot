@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -100,7 +101,7 @@ public class JSONUtil {
         String ret = null;
         try {
             // 读取文件内容为字符串
-            String content = new String(Files.readAllBytes(Paths.get(getSettingMap().get("googleModel"))));
+            String content = new String(Files.readAllBytes(Paths.get(getSettingMap().get("googleModel"))), StandardCharsets.UTF_8);
 
             // 将字符串解析为 JSON 对象
             JSONObject jsonObject = JSON.parseObject(content);
@@ -109,7 +110,7 @@ public class JSONUtil {
 //            System.out.println(jsonObject.toJSONString());
             ret = jsonObject.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+           logger.warn("找不到模型文件");
         }
         return ret;
     }
