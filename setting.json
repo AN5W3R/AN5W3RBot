@@ -9,5 +9,7 @@
 
   "proxyPort": "7890",
   "google_ai_key": "",
-  "googleModel": "D:\\QQBOT\\AN5W3RBot\\conf\\sakiko.json"
+  "googleModel": "D:\\QQBOT\\AN5W3RBot\\conf\\sakiko.json",
+
+ "guessRatio": "2"
 }

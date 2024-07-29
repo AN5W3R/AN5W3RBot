@@ -8,9 +8,11 @@ import org.an5w3r.an5w3rBot.dao.TextDao;
 import org.an5w3r.an5w3rBot.entity.Image;
 import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
+import org.an5w3r.an5w3rBot.util.ImageUtil;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -149,8 +151,8 @@ public class MessageService {
                 break;
         }
     }
-    private static String[] guessImage = null;
-
+    private static Image guessImage = null;
+    private static int countGuess = 0;
     private static void startGuessCharacter(Message message) throws IOException {
         String[] splitMsg = message.splitMsg();
         if (splitMsg.length < 2) {
@@ -160,10 +162,13 @@ public class MessageService {
         String galleryName = splitMsg[1];
         Image image = ImageDao.getImageByMsg(galleryName);
         if (image != null) {
-           guessImage = image.getTexts();
+            guessImage = image;
+            String cropImage = ImageUtil.cropImage(guessImage.getFile());
+
+
             MsgAction.sendMsg(message
                     , MsgItem.atItem(message.getUserId())
-                    , new MsgItem("image", "file", image.getFile())
+                    , new MsgItem("image", "file", cropImage)
                     , new MsgItem("请猜这个角色是谁！"));
         } else {
             MsgAction.sendMsg(message, new MsgItem("图库名称不正确或不存在"));
@@ -178,23 +183,34 @@ public class MessageService {
         }
         String answer = splitMsg[1];
         if (guessImage != null) {
-            String[] correctAnswers = guessImage;
+            String[] correctAnswers = guessImage.getTexts();
             for (String correctAnswer : correctAnswers) {
                 if (answer.contains(correctAnswer)) {
                     MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
                             , new MsgItem("恭喜你，答案正确！")
                     );
                     guessImage = null;
+                    countGuess = 0;
                     return;
                 }
             }
             MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
                     , new MsgItem("回答错误！")
             );
+            countGuess++;
+            if (countGuess>=1){
+                MsgAction.sendMsg(message
+                        , MsgItem.atItem(message.getUserId())
+                        , new MsgItem("\n正确答案为"+ Arrays.toString(guessImage.getTexts()))
+                        , new MsgItem("image","file", guessImage.getFile())
+                );
+                guessImage = null;
+                countGuess = 0;
+            }
 
 //            guessImage = null; // 清除当前猜测的图片
         } else {
-            MsgAction.sendMsg(message, new MsgItem("没有找到对应的猜测图片，请先使用猜角色功能。"));
+            MsgAction.sendMsg(message, new MsgItem("没有找到对应的答案,请确定是否存在对应文本"));
         }
     }
 

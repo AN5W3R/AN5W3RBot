@@ -1,10 +1,13 @@
 package org.an5w3r.an5w3rBot.util;
 
-import org.an5w3r.an5w3rBot.Client;
 import org.an5w3r.an5w3rBot.entity.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.io.*;
 import java.net.HttpURLConnection;
 
@@ -13,6 +16,7 @@ import java.util.*;
 
 public class ImageUtil {
     private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
+
 
     public static Image getRandomImageLocal(String src) throws IOException {
         Image retImg = new Image();
@@ -97,6 +101,41 @@ public class ImageUtil {
         fileInputStream.close();
         return Base64.getEncoder().encodeToString(bytes);
     }
+
+    public static String cropImage(String base64Image) throws IOException {
+        BufferedImage image = base64ToBufferedImage(base64Image);
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int guessRatio = Integer.parseInt(JSONUtil.getSettingMap().get("guessRatio"));
+        int newWidth = width / guessRatio;
+        int newHeight = height / guessRatio;
+
+        Random rand = new Random();
+        int x = rand.nextInt(width - newWidth);
+        int y = rand.nextInt(height - newHeight);
+
+        BufferedImage croppedImage = image.getSubimage(x, y, newWidth, newHeight);
+        return bufferedImageToBase64(croppedImage);
+    }
+
+    // 将Base64字符串转换为BufferedImage
+    public static BufferedImage base64ToBufferedImage(String base64Image) throws IOException {
+        base64Image =  base64Image.replaceFirst("base64://","");
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+        return ImageIO.read(bis);
+    }
+
+    // 将BufferedImage转换为Base64字符串
+    public static String bufferedImageToBase64(BufferedImage image) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", bos);
+        byte[] imageBytes = bos.toByteArray();
+        return "base64://"+Base64.getEncoder().encodeToString(imageBytes);
+    }
+
+
 
 }
 
