@@ -151,7 +151,8 @@ public class MessageService {
                 break;
         }
     }
-    private static Image guessImage = null;
+
+    private static Map<String,Image> guessImage = new HashMap<>();
     private static int countGuess = 0;
     private static void startGuessCharacter(Message message) throws IOException {
         String[] splitMsg = message.splitMsg();
@@ -162,8 +163,8 @@ public class MessageService {
         String galleryName = splitMsg[1];
         Image image = ImageDao.getImageByMsg(galleryName);
         if (image != null) {
-            guessImage = image;
-            String cropImage = ImageUtil.cropImage(guessImage.getFile());
+            guessImage.put(message.getGroupId(),image);
+            String cropImage = ImageUtil.cropImage(image.getFile());
 
 
             MsgAction.sendMsg(message
@@ -182,14 +183,15 @@ public class MessageService {
             return;
         }
         String answer = splitMsg[1];
-        if (guessImage != null) {
-            String[] correctAnswers = guessImage.getTexts();
+        if (guessImage.get(message.getGroupId()) != null) {
+            String[] correctAnswers = guessImage.get(message.getGroupId()).getTexts();
             for (String correctAnswer : correctAnswers) {
                 if (answer.contains(correctAnswer)) {
                     MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
                             , new MsgItem("恭喜你，答案正确！")
+                            , new MsgItem("image","file", guessImage.get(message.getGroupId()).getFile())
                     );
-                    guessImage = null;
+                    guessImage.put(message.getGroupId(),null);
                     countGuess = 0;
                     return;
                 }
@@ -198,13 +200,14 @@ public class MessageService {
                     , new MsgItem("回答错误！")
             );
             countGuess++;
-            if (countGuess>=1){
+            int  chance = Integer.parseInt(JSONUtil.getSettingMap().get("guessChance"));
+            if (countGuess>=chance){
                 MsgAction.sendMsg(message
                         , MsgItem.atItem(message.getUserId())
-                        , new MsgItem("\n正确答案为"+ Arrays.toString(guessImage.getTexts()))
-                        , new MsgItem("image","file", guessImage.getFile())
+                        , new MsgItem("\n正确答案为"+ Arrays.toString(guessImage.get(message.getGroupId()).getTexts()))
+                        , new MsgItem("image","file", guessImage.get(message.getMessageId()).getFile())
                 );
-                guessImage = null;
+                guessImage.put(message.getGroupId(),null);
                 countGuess = 0;
             }
 
