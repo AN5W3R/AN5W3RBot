@@ -47,15 +47,15 @@ public class AN5W3RBotApplication implements CommandLineRunner {
             }
         }, 1000, 5000);
 
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    GameTeamService.promptTeam();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        },1000*60,1000*60);
+//        t.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                try {
+//                    GameTeamService.promptTeam();
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        },1000*60,1000*60);
     }
 }

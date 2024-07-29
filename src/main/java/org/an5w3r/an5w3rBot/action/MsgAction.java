@@ -15,14 +15,14 @@ import java.util.concurrent.ExecutionException;
 public class MsgAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
 
-    //发送消息
-    public synchronized static void sendMsg(Message message, MsgItem... retMessage) throws IOException {
+    //发送消息synchronized
+    public static void sendMsg(Message message, MsgItem... retMessage) throws IOException {
 
         List<MsgItem> itemList = new ArrayList<>(Arrays.asList(retMessage));
         sendMsg(message,itemList);
     }
 
-   public synchronized static void deleteMsg(Message message){
+   public static void deleteMsg(Message message){
        Request<Object> paramsRequest = new Request<>();
        paramsRequest.setAction("delete_msg");
        Map<String,String> map = new HashMap<>();
