@@ -17,12 +17,11 @@ public class MsgAction {
 
     //发送消息synchronized
     public static void sendMsg(Message message, MsgItem... retMessage) throws IOException {
-
         List<MsgItem> itemList = new ArrayList<>(Arrays.asList(retMessage));
         sendMsg(message,itemList);
     }
 
-   public static void deleteMsg(Message message){
+   public synchronized static void deleteMsg(Message message){
        Request<Object> paramsRequest = new Request<>();
        paramsRequest.setAction("delete_msg");
        Map<String,String> map = new HashMap<>();
@@ -34,7 +33,7 @@ public class MsgAction {
        Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
    }
 
-    public static void sendMsg(Message message, List<MsgItem> itemList) {
+    public synchronized static void sendMsg(Message message, List<MsgItem> itemList) {
         String rawMessage = message.getRawMessage();
 
         Map<String, Object> params = new HashMap<>();

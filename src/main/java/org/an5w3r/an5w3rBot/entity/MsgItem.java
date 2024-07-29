@@ -30,4 +30,11 @@ public class MsgItem {
         return new MsgItem("at", "qq", QQ);
     }
 
+    @Override
+    public String toString() {
+        if (type.equals("image")){
+            return "图片";
+        }
+        return data.toString();
+    }
 }

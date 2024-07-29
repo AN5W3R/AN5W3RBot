@@ -20,6 +20,8 @@ public class SwitchService {
         functionList.add("退出");
         functionList.add("解散");
         functionList.add("开了");
+        functionList.add("猜角色");
+        functionList.add("答案");
     }
 
     public static void changeFunction(Message message) throws IOException {

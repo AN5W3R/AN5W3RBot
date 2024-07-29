@@ -186,5 +186,22 @@ public class TextUtil {
         }
         return null;
     }
+    public static String[] getTextsByImage(Image image) throws IOException {
+        //如果没有对应文本返回null
+        String in = image.getFileName();
+        String type = image.getType();
 
+        String imgSrc = JSONUtil.getImageSrcMap().get(type);
+        Map<String, String[]> TextJsonMap = JSONUtil.getImageTextMap(imgSrc);
+        if (TextJsonMap == null){
+            return null;
+        }
+        for (String s : TextJsonMap.keySet()) {
+            if (in.contains(s)) {
+                String[] value = TextJsonMap.get(s);
+                return value;
+            }
+        }
+        return null;
+    }
 }

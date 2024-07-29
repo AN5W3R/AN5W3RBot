@@ -16,6 +16,7 @@ public class ImageDao {
 
         Image randomImageLocal = ImageUtil.getRandomImageLocal(src);
         randomImageLocal.setType(in);
+        randomImageLocal.setTexts(TextUtil.getTextsByImage(randomImageLocal));
         randomImageLocal.setText(TextUtil.getTextByImage(randomImageLocal));
 
         return randomImageLocal;

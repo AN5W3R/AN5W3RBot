@@ -12,8 +12,7 @@ import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
@@ -109,13 +108,18 @@ public class MessageService {
             case "开了":
                 handleTeamFunction(message, key);
                 break;
+            case "猜角色":
+            case "答案":
+                handleGuessCharacterFunction(message, key);
+                break;
+
         }
+
     }
 
     private static void handleTranslation(Message message) throws IOException {
         MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId()), new MsgItem(TextDao.getTranslation(message)));
     }
-
     private static void handleTeamFunction(Message message, String key) throws IOException {
         switch (key) {
             case "创建":
@@ -135,6 +139,66 @@ public class MessageService {
                 break;
         }
     }
+    private static void handleGuessCharacterFunction(Message message, String key) throws IOException {
+        switch (key) {
+            case "猜角色":
+                startGuessCharacter(message);
+                break;
+            case "答案":
+                submitGuessCharacterAnswer(message);
+                break;
+        }
+    }
+    private static String[] guessImage = null;
+
+    private static void startGuessCharacter(Message message) throws IOException {
+        String[] splitMsg = message.splitMsg();
+        if (splitMsg.length < 2) {
+            MsgAction.sendMsg(message, new MsgItem("指令格式不正确"));
+            return;
+        }
+        String galleryName = splitMsg[1];
+        Image image = ImageDao.getImageByMsg(galleryName);
+        if (image != null) {
+           guessImage = image.getTexts();
+            MsgAction.sendMsg(message
+                    , MsgItem.atItem(message.getUserId())
+                    , new MsgItem("image", "file", image.getFile())
+                    , new MsgItem("请猜这个角色是谁！"));
+        } else {
+            MsgAction.sendMsg(message, new MsgItem("图库名称不正确或不存在"));
+        }
+    }
+
+    private static void submitGuessCharacterAnswer(Message message) throws IOException {
+        String[] splitMsg = message.splitMsg();
+        if (splitMsg.length < 2) {
+            MsgAction.sendMsg(message, new MsgItem("指令格式不正确"));
+            return;
+        }
+        String answer = splitMsg[1];
+        if (guessImage != null) {
+            String[] correctAnswers = guessImage;
+            for (String correctAnswer : correctAnswers) {
+                if (answer.contains(correctAnswer)) {
+                    MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
+                            , new MsgItem("恭喜你，答案正确！")
+                    );
+                    guessImage = null;
+                    return;
+                }
+            }
+            MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
+                    , new MsgItem("回答错误！")
+            );
+
+//            guessImage = null; // 清除当前猜测的图片
+        } else {
+            MsgAction.sendMsg(message, new MsgItem("没有找到对应的猜测图片，请先使用猜角色功能。"));
+        }
+    }
+
+
 
 
     private static void processImageFunction(Message message, String msg) throws IOException {//图库功能
