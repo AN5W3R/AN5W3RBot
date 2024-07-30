@@ -53,6 +53,7 @@ public class TextUtil {
             return "请求时出了点小问题";
         }
     }
+    //谷歌ai
     public static String getGoogleText(Message message){
         String sendMsg = message.atMsg();
         String id = message.getGroupId();
@@ -127,7 +128,6 @@ public class TextUtil {
             return "请求超时了";
         }
     }
-
     public static String googleAiResponseText(String jsonResponse) {
         // 将googleResponse的Text提取出来
         JSONObject jsonObject = JSON.parseObject(jsonResponse);
@@ -151,7 +151,7 @@ public class TextUtil {
         String message = jsonObject.getString("message");
         return "";
     }
-
+    //翻译
     public static String getTranslation(String text, String sourceLang, String targetLang){
 
         TextResult result = null;
@@ -166,6 +166,7 @@ public class TextUtil {
         return result.getText();
     }
 
+    //获取图片文本
     public static String getTextByImage(Image image) throws IOException {
         //如果没有对应文本返回null
         String in = image.getFileName();

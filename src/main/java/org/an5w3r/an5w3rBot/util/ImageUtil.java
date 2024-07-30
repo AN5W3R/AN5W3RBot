@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.*;
 import java.net.HttpURLConnection;
 
@@ -16,43 +14,6 @@ import java.util.*;
 
 public class ImageUtil {
     private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
-
-
-    public static Image getRandomImageLocal(String src) throws IOException {
-        Image retImg = new Image();
-        //无法获取图片名称
-        File folder = new File(src);
-        List<String> imagePaths = new ArrayList<>();
-
-        if (folder.isDirectory()) {
-            for (File file : folder.listFiles()) {
-                if (isImageFile(file)) {
-                    imagePaths.add(file.getAbsolutePath());
-                }
-            }
-        }
-
-        if (!imagePaths.isEmpty()) {
-            Random random = new Random(System.currentTimeMillis());
-            String randomImagePath = imagePaths.get(random.nextInt(imagePaths.size()));
-//            try {
-                File file = new File(randomImagePath);
-                retImg.setFile("file:///"+file.getAbsolutePath());;
-                retImg.setFileName(file.getName());
-//                String base64Image = encodeFileToBase64Binary(randomImagePath);
-//                retImg.setFile("base64://"+base64Image);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-        } else {
-            retImg.setFileName("FromURL");
-            retImg.setFile(getRandomImageUrl());
-            retImg.setText("图片来源网络");
-            retImg.setType("网络图片");
-        }
-
-        return retImg;
-    }
 
     public static String getRandomImageUrl(){
 //        https://api.sevin.cn/api/ecy.php
@@ -83,26 +44,7 @@ public class ImageUtil {
         return content.toString();
     }
 
-    private static boolean isImageFile(File file) {
-        String[] imageExtensions = { "jpg", "jpeg", "png", "gif", "bmp" };
-        String fileName = file.getName().toLowerCase();
-        for (String extension : imageExtensions) {
-            if (fileName.endsWith(extension)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static String encodeFileToBase64Binary(String filePath) throws IOException {
-        File file = new File(filePath);
-        FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] bytes = new byte[(int) file.length()];
-        fileInputStream.read(bytes);
-        fileInputStream.close();
-        return Base64.getEncoder().encodeToString(bytes);
-    }
-
+    //截取图片部分
     public static String cropImage(String imagePath) throws IOException {
 //        BufferedImage image = base64ToBufferedImage(base64Image);
         BufferedImage image = ImageIO.read(new File(imagePath.replaceFirst("file:///","")));
@@ -120,7 +62,26 @@ public class ImageUtil {
         BufferedImage croppedImage = image.getSubimage(x, y, newWidth, newHeight);
         return bufferedImageToBase64(croppedImage);
     }
-
+    //判断是否是图片
+    public static boolean isImageFile(File file) {
+        String[] imageExtensions = { "jpg", "jpeg", "png", "gif", "bmp" };
+        String fileName = file.getName().toLowerCase();
+        for (String extension : imageExtensions) {
+            if (fileName.endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    //文件转Base64
+    private static String encodeFileToBase64Binary(String filePath) throws IOException {
+        File file = new File(filePath);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] bytes = new byte[(int) file.length()];
+        fileInputStream.read(bytes);
+        fileInputStream.close();
+        return Base64.getEncoder().encodeToString(bytes);
+    }
     // 将Base64字符串转换为BufferedImage
     public static BufferedImage base64ToBufferedImage(String base64Image) throws IOException {
         base64Image =  base64Image.replaceFirst("base64://","");
@@ -128,7 +89,6 @@ public class ImageUtil {
         ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
         return ImageIO.read(bis);
     }
-
     // 将BufferedImage转换为Base64字符串
     public static String bufferedImageToBase64(BufferedImage image) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
