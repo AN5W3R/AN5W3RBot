@@ -177,7 +177,7 @@ public class TextUtil {
             return null;
         }
         for (String s : TextJsonMap.keySet()) {
-            if (in.contains(s)) {
+            if (in.equals(s)) {
                 String[] value = TextJsonMap.get(s);
                 Random r = new Random();//util.Random
                 int index =r.nextInt(value.length);
@@ -197,7 +197,7 @@ public class TextUtil {
             return null;
         }
         for (String s : TextJsonMap.keySet()) {
-            if (in.contains(s)) {
+            if (in.equals(s)) {
                 String[] value = TextJsonMap.get(s);
                 return value;
             }

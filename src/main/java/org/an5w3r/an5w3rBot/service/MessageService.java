@@ -185,6 +185,13 @@ public class MessageService {
         String answer = splitMsg[1];
         if (guessImage.get(message.getGroupId()) != null) {
             String[] correctAnswers = guessImage.get(message.getGroupId()).getTexts();
+            String file = guessImage.get(message.getGroupId()).getFile();
+            if (correctAnswers==null){
+                MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
+                        , new MsgItem("没有对应文本！")
+                );
+                return;
+            }
             for (String correctAnswer : correctAnswers) {
                 if (answer.contains(correctAnswer)) {
                     MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
@@ -200,18 +207,18 @@ public class MessageService {
                     , new MsgItem("回答错误！")
             );
             countGuess++;
-            int  chance = Integer.parseInt(JSONUtil.getSettingMap().get("guessChance"));
+            String guessChance = JSONUtil.getSettingMap().get("guessChance");
+            int  chance = Integer.parseInt(guessChance);
             if (countGuess>=chance){
                 MsgAction.sendMsg(message
                         , MsgItem.atItem(message.getUserId())
-                        , new MsgItem("\n正确答案为"+ Arrays.toString(guessImage.get(message.getGroupId()).getTexts()))
-                        , new MsgItem("image","file", guessImage.get(message.getMessageId()).getFile())
+                        , new MsgItem("\n正确答案为"+ Arrays.toString(correctAnswers))
+                        , new MsgItem("image","file",file)
                 );
                 guessImage.put(message.getGroupId(),null);
                 countGuess = 0;
             }
 
-//            guessImage = null; // 清除当前猜测的图片
         } else {
             MsgAction.sendMsg(message, new MsgItem("没有找到对应的答案,请确定是否存在对应文本"));
         }

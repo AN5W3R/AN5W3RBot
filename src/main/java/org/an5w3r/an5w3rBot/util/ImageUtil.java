@@ -35,14 +35,15 @@ public class ImageUtil {
         if (!imagePaths.isEmpty()) {
             Random random = new Random(System.currentTimeMillis());
             String randomImagePath = imagePaths.get(random.nextInt(imagePaths.size()));
-            try {
+//            try {
                 File file = new File(randomImagePath);
+                retImg.setFile("file:///"+file.getAbsolutePath());;
                 retImg.setFileName(file.getName());
-                String base64Image = encodeFileToBase64Binary(randomImagePath);
-                retImg.setFile("base64://"+base64Image);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//                String base64Image = encodeFileToBase64Binary(randomImagePath);
+//                retImg.setFile("base64://"+base64Image);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         } else {
             retImg.setFileName("FromURL");
             retImg.setFile(getRandomImageUrl());
@@ -102,8 +103,9 @@ public class ImageUtil {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    public static String cropImage(String base64Image) throws IOException {
-        BufferedImage image = base64ToBufferedImage(base64Image);
+    public static String cropImage(String imagePath) throws IOException {
+//        BufferedImage image = base64ToBufferedImage(base64Image);
+        BufferedImage image = ImageIO.read(new File(imagePath.replaceFirst("file:///","")));
 
         int width = image.getWidth();
         int height = image.getHeight();
