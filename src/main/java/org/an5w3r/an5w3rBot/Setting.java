@@ -6,7 +6,5 @@ import java.util.Map;
 
 public class Setting {
     public static boolean isOpen = false;
-    public static boolean isPrivate = true;
-    public static boolean isGroupAt = true;
     public static Map<String, List<String>> FunctionSwitch  = new HashMap<>();//默认为全开,key为群号,value为要关闭的功能
 }

@@ -15,11 +15,13 @@ public class SwitchService {
 
     static {
         functionList.add("翻译");
+
         functionList.add("创建");
         functionList.add("加入");
         functionList.add("退出");
         functionList.add("解散");
         functionList.add("开了");
+
         functionList.add("猜角色");
         functionList.add("答案");
     }

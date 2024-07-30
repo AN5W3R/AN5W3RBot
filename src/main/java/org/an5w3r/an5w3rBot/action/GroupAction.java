@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class GroupAction {
     private static final Logger logger = LoggerFactory.getLogger(MsgAction.class);
-
+    //改群名片
     public synchronized static void setGroupCard(Message message,String card){
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("set_group_card");
@@ -26,7 +26,7 @@ public class GroupAction {
         String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
     }
-
+    //禁言
     public synchronized static void setGroupBan(Message message,int duration){
         Request<Object> paramsRequest = new Request<>();
         paramsRequest.setAction("set_group_ban");

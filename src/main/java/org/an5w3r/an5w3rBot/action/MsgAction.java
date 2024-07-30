@@ -21,18 +21,6 @@ public class MsgAction {
         sendMsg(message,itemList);
     }
 
-   public synchronized static void deleteMsg(Message message){
-       Request<Object> paramsRequest = new Request<>();
-       paramsRequest.setAction("delete_msg");
-       Map<String,String> map = new HashMap<>();
-       map.put("message_id",message.getMessageId());
-       paramsRequest.setParams(map);
-
-       logger.info("撤回消息");
-       String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
-       Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
-   }
-
     public synchronized static void sendMsg(Message message, List<MsgItem> itemList) {
         String rawMessage = message.getRawMessage();
 
@@ -56,6 +44,18 @@ public class MsgAction {
         paramsRequest.setParams(params);
 
 
+        String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
+        Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
+    }
+    //撤回消息
+    public synchronized static void deleteMsg(Message message){
+        Request<Object> paramsRequest = new Request<>();
+        paramsRequest.setAction("delete_msg");
+        Map<String,String> map = new HashMap<>();
+        map.put("message_id",message.getMessageId());
+        paramsRequest.setParams(map);
+
+        logger.info("撤回消息");
         String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
     }

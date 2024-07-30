@@ -35,6 +35,7 @@ public class JSONUtil {
         logger.warn("文件路径不正确");
         return null;
     }
+    //Text相关
     public static Map<String, String[]> getAtTextMap() throws IOException {//修改为getJson
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
@@ -68,6 +69,7 @@ public class JSONUtil {
         logger.warn("文件路径不正确");
         return null;
     }
+    //Image相关
     public static Map<String, String[]> getImageTextMap(String src) throws IOException {//修改为getJson
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径
@@ -100,6 +102,7 @@ public class JSONUtil {
         logger.warn("文件路径不正确");
         return null;
     }
+    //Google模型相关
     public static String getBaseGoogleModel(){
         String ret = null;
         try {
