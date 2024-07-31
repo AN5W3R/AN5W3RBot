@@ -31,6 +31,7 @@ import javax.net.ssl.SSLContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -209,7 +210,7 @@ public class TextUtil {
     }
     public static String[] getFortuneText() throws IOException {
         String filePath = JSONUtil.getSettingMap().get("fortuneSrc") + "\\text.json";
-        String textList = new String(Files.readAllBytes(Paths.get(filePath)));
+        String textList = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
 
         // 解析 JSON 字符串
         JSONArray jsonArray = JSON.parseArray(textList);
