@@ -103,9 +103,15 @@ public class MessageService {
             case "答案":
                 handleGuessCharacterFunction(message, key);
                 break;
-
+            case "抽签":
+                handleFortune(message);
+                break;
         }
 
+    }
+
+    private static void handleFortune(Message message) throws IOException {
+        ImageService.getFortune(message);
     }
 
     private static void handleTranslation(Message message) throws IOException {
@@ -140,7 +146,6 @@ public class MessageService {
                 break;
         }
     }
-
 
     private static void handleFunctionManagement(Message message) throws IOException {
         if ("owner".equals(message.getSender().getRole()) || "admin".equals(message.getSender().getRole())) {

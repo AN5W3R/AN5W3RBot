@@ -24,6 +24,8 @@ public class SwitchService {
 
         functionList.add("猜角色");
         functionList.add("答案");
+
+        functionList.add("抽签");
     }
 
     public static void changeFunction(Message message) throws IOException {

@@ -32,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class TextUtil {
@@ -204,5 +206,26 @@ public class TextUtil {
             }
         }
         return null;
+    }
+    public static String[] getFortuneText() throws IOException {
+        String filePath = JSONUtil.getSettingMap().get("fortuneSrc") + "\\text.json";
+        String textList = new String(Files.readAllBytes(Paths.get(filePath)));
+
+        // 解析 JSON 字符串
+        JSONArray jsonArray = JSON.parseArray(textList);
+
+        // 创建随机数生成器
+        Random random = new Random();
+
+        // 从 JSON 数组中随机选择一条记录
+        int randomIndex = random.nextInt(jsonArray.size());
+        JSONObject randomObject = jsonArray.getJSONObject(randomIndex);
+
+        // 获取 title 和 content 值
+        String title = randomObject.getString("title");
+        String content = randomObject.getString("content");
+
+        // 返回 title 和 content 作为字符串数组
+        return new String[]{title, content};
     }
 }

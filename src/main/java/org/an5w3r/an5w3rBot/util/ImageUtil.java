@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -60,7 +61,6 @@ public class ImageUtil {
 
     //截取图片部分
     public static String cropImage(String imagePath) throws IOException {
-        //TODO 添加判断截取后图片大小
         BufferedImage image = ImageIO.read(new File(imagePath.replaceFirst("file:///","")));
 
         int width = image.getWidth();
@@ -76,22 +76,6 @@ public class ImageUtil {
         BufferedImage croppedImage = image.getSubimage(x, y, newWidth, newHeight);
 
         return bufferedImageToBase64(croppedImage);
-    }
-    //压缩图片并转为Base64
-    private static String compressImage(BufferedImage image, float quality) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
-        ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
-        jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        jpgWriteParam.setCompressionQuality(quality); // 设置压缩质量
-
-        try (ImageOutputStream ios = ImageIO.createImageOutputStream(baos)) {
-            jpgWriter.setOutput(ios);
-            jpgWriter.write(null, new IIOImage(image, null, null), jpgWriteParam);
-        }
-        jpgWriter.dispose();
-//        return baos.toByteArray();
-        return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
     //文件转Base64
     private static String encodeFileToBase64Binary(String filePath) throws IOException {
@@ -118,12 +102,63 @@ public class ImageUtil {
         }
     }
 
-//    public static String bufferedImageToBase64(BufferedImage image) throws IOException {
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ImageIO.write(image, "png", bos);
-//        byte[] imageBytes = bos.toByteArray();
-//        return "base64://"+Base64.getEncoder().encodeToString(imageBytes);
-//    }
+    public static String fortuneInsertText(Image fortuneImage, String[] fortuneText, org.an5w3r.an5w3rBot.entity.Font font) {
+        try {
+            // 读取图片
+            String file = fortuneImage.getFile();
+            String s = file.replaceFirst("file:///", "");
+            BufferedImage image = ImageIO.read(new File(s));
+
+            // 获取Graphics2D对象
+            Graphics2D g2d = image.createGraphics();
+
+            // 设置字体和颜色
+
+            String title = fortuneText[0];
+
+            int titleX = font.getTitleX();
+            int titleY= font.getTitleY();
+            int titleStyle = font.getTitleStyle();
+            int titleSize = font.getTitleSize();
+            String titleFont = font.getTitleFont();
+            Color titleColor = font.titleColor();
+
+            int textX = font.getTextX();
+            int textY = font.getTextY();
+            int textStyle = font.getTextStyle();
+            int textSize = font.getTextSize();
+            String textFont = font.getTextFont();
+            int lineSize = font.getLineSize();
+            Color textColor = font.textColor();
+
+
+            g2d.setFont(new Font(titleFont,titleStyle,  titleSize));
+            g2d.setColor(titleColor);
+            g2d.drawString(title, titleX, titleY);
+
+
+            g2d.setFont(new Font(textFont, textStyle, textSize));
+            g2d.setColor(textColor);
+            // 绘制竖向文本
+            String text = fortuneText[1];
+
+            for (int i = 0; i < text.length(); i++) {
+                if (i%lineSize==0){
+                    textX +=textSize;
+                }
+                g2d.drawString(String.valueOf(text.charAt(i)), textX, textY + (i%lineSize * textSize));
+            }
+
+            // 释放Graphics2D对象
+            g2d.dispose();
+
+            // 保存修改后的图片
+            return bufferedImageToBase64(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 

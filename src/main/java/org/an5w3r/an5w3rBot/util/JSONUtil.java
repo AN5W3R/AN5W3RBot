@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import org.an5w3r.an5w3rBot.entity.Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -70,6 +72,17 @@ public class JSONUtil {
         return null;
     }
     //Image相关
+    public static Font getFont() throws IOException {
+        // 读取 JSON 文件内容
+        String filePath = getSettingMap().get("fortuneSrc")+"\\font.json";
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+
+        // 解析 JSON 字符串为 Font 对象
+        Font font = JSON.parseObject(content, Font.class);
+
+
+        return font;
+    }
     public static Map<String, String[]> getImageTextMap(String src) throws IOException {//修改为getJson
         String jsonStr = null;
         // 创建一个 Path 对象，表示要读取的文件路径

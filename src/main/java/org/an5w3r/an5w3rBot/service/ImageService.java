@@ -2,11 +2,13 @@ package org.an5w3r.an5w3rBot.service;
 
 import org.an5w3r.an5w3rBot.action.MsgAction;
 import org.an5w3r.an5w3rBot.dao.ImageDao;
+import org.an5w3r.an5w3rBot.entity.Font;
 import org.an5w3r.an5w3rBot.entity.Image;
 import org.an5w3r.an5w3rBot.entity.Message;
 import org.an5w3r.an5w3rBot.entity.MsgItem;
 import org.an5w3r.an5w3rBot.util.ImageUtil;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
+import org.an5w3r.an5w3rBot.util.TextUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -100,6 +102,19 @@ public class ImageService {
                 }
             }
         }
+    }
+
+    public static void getFortune(Message message) throws IOException {
+        //获取底图
+        Image fortuneImage = ImageDao.getFortuneImage();
+        //获取text
+        String[] fortuneText = TextUtil.getFortuneText();
+        //获取font
+        Font font = JSONUtil.getFont();
+        //插入文字
+        String pic = ImageUtil.fortuneInsertText(fortuneImage, fortuneText, font);
+
+        MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId()), new MsgItem("image", "file", pic));
     }
 
 }

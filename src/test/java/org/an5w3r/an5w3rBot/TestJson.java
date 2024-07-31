@@ -217,5 +217,9 @@ public class TestJson {
         boolean matches = Pattern.matches(pattern, input);
         System.out.println("是否匹配: " + matches);
     }
+    @Test
+    public void testFont() throws IOException {
+        System.out.println(JSONUtil.getFont());
+    }
 
 }

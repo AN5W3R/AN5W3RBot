@@ -1,7 +1,8 @@
 {
   "AtMessage": "D:\\QQBOT\\AN5W3RBot\\conf\\AtMessage.json",
-  "ImageSrcLib" : "D:\\QQBOT\\AN5W3RBot\\conf\\ImageSrc.json",
   "NotAtMessage": "D:\\QQBOT\\AN5W3RBot\\conf\\NotAtMessage.json",
+  "ImageSrcLib" : "D:\\QQBOT\\AN5W3RBot\\conf\\ImageSrc.json",
+  "fortuneSrc": "D:\\QQBOT\\AN5W3RBot\\fortune",
   "port": "6700",
   "identifier": ".",
 
@@ -12,5 +13,5 @@
   "googleModel": "D:\\QQBOT\\AN5W3RBot\\conf\\sakiko.json",
 
   "guessRatio": "2",
-  "guessChance": "3"
+  "guessChance": "1"
 }
