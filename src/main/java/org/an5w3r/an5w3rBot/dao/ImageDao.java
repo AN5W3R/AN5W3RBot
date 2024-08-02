@@ -71,6 +71,7 @@ public class ImageDao {
             File file = new File(randomImagePath);
             image.setFile("file:///" + file.getAbsolutePath());
         } else {//获取底图失败
+
         }
 
         return image;

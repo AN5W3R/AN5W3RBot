@@ -13,5 +13,7 @@
   "googleModel": "D:\\QQBOT\\AN5W3RBot\\conf\\sakiko.json",
 
   "guessRatio": "2",
-  "guessChance": "1"
+  "guessChance": "1",
+
+  "BiliBiliStreamRoom": "D:\\QQBOT\\AN5W3RBot\\conf\\BiliBiliStreamRoom.json"
 }

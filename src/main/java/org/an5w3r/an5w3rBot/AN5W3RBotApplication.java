@@ -1,5 +1,6 @@
 package org.an5w3r.an5w3rBot;
 
+import org.an5w3r.an5w3rBot.service.BilibiliLiveMonitor;
 import org.an5w3r.an5w3rBot.service.GameTeamService;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.Logger;
@@ -47,15 +48,11 @@ public class AN5W3RBotApplication implements CommandLineRunner {
             }
         }, 1000, 5000);
 
-//        t.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                try {
-//                    GameTeamService.promptTeam();
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        },1000*60,1000*60);
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                BilibiliLiveMonitor.liveMonitor();
+            }
+        },0,1000*60);
     }
 }
