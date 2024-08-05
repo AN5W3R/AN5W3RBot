@@ -1,7 +1,6 @@
 package org.an5w3r.an5w3rBot;
 
-import org.an5w3r.an5w3rBot.service.BilibiliLiveMonitor;
-import org.an5w3r.an5w3rBot.service.GameTeamService;
+import org.an5w3r.an5w3rBot.service.BilibiliService;
 import org.an5w3r.an5w3rBot.util.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,8 @@ public class AN5W3RBotApplication implements CommandLineRunner {
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-                BilibiliLiveMonitor.liveMonitor();
+                logger.info("检测哔哩哔哩直播间状态");
+                BilibiliService.liveMonitor();
             }
         },0,1000*60);
     }

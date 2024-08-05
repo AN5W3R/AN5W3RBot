@@ -17,7 +17,6 @@ import java.util.Map;
 
 public class ImageService {
     private static Map<String, Image> guessImage = new HashMap<>();
-    private static int countGuess = 0;
     public static void startGuessCharacter(Message message) throws IOException {
         String[] splitMsg = message.splitMsg();
         if (splitMsg.length < 2) {
@@ -39,20 +38,46 @@ public class ImageService {
             MsgAction.sendMsg(message, new MsgItem("图库名称不正确或不存在"));
         }
     }
-
-    public static void submitGuessCharacterAnswer(Message message) throws IOException {
-        String[] splitMsg = message.splitMsg();
-        if (splitMsg.length < 2) {
-            MsgAction.sendMsg(message, new MsgItem("指令格式不正确"));
-            return;
+    public static boolean checkGuessCharacterAnswer(Message message) throws IOException {
+        String[] correctAnswers = guessImage.get(message.getGroupId()).getTexts();
+        String file = guessImage.get(message.getGroupId()).getFile();
+        if (correctAnswers==null){
+            return false;
         }
-        String answer = splitMsg[1];
+        String answer = message.atMsg();
+        for (String correctAnswer : correctAnswers) {
+            if (answer.contains(correctAnswer)) {
+                MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
+                        , new MsgItem("恭喜你，答案正确！")
+                        , new MsgItem("image","file", file)
+                );
+                guessImage.put(message.getGroupId(),null);
+                return true;
+            }
+        }
+        return false;
+    }
+    public static void submitGuessCharacterAnswer(Message message) throws IOException {
         if (guessImage.get(message.getGroupId()) != null) {
+            String[] splitMsg = message.splitMsg();
+
+            if (splitMsg.length < 2) {
+                String[] correctAnswers = guessImage.get(message.getGroupId()).getTexts();
+                String file = guessImage.get(message.getGroupId()).getFile();
+                MsgAction.sendMsg(message
+                        , MsgItem.atItem(message.getUserId())
+                        , new MsgItem("\n正确答案为"+ Arrays.toString(correctAnswers))
+                        , new MsgItem("image","file",file)
+                );
+                guessImage.put(message.getGroupId(),null);
+                return;
+            }
+            String answer = splitMsg[1];
             String[] correctAnswers = guessImage.get(message.getGroupId()).getTexts();
             String file = guessImage.get(message.getGroupId()).getFile();
             if (correctAnswers==null){
                 MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
-                        , new MsgItem("没有对应文本！")
+                        , new MsgItem("没有文本！")
                 );
                 return;
             }
@@ -60,31 +85,17 @@ public class ImageService {
                 if (answer.contains(correctAnswer)) {
                     MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
                             , new MsgItem("恭喜你，答案正确！")
-                            , new MsgItem("image","file", guessImage.get(message.getGroupId()).getFile())
+                            , new MsgItem("image","file", file)
                     );
                     guessImage.put(message.getGroupId(),null);
-                    countGuess = 0;
                     return;
                 }
             }
             MsgAction.sendMsg(message, MsgItem.atItem(message.getUserId())
                     , new MsgItem("回答错误！")
             );
-            countGuess++;
-            String guessChance = JSONUtil.getSettingMap().get("guessChance");
-            int  chance = Integer.parseInt(guessChance);
-            if (countGuess>=chance){
-                MsgAction.sendMsg(message
-                        , MsgItem.atItem(message.getUserId())
-                        , new MsgItem("\n正确答案为"+ Arrays.toString(correctAnswers))
-                        , new MsgItem("image","file",file)
-                );
-                guessImage.put(message.getGroupId(),null);
-                countGuess = 0;
-            }
-
         } else {
-            MsgAction.sendMsg(message, new MsgItem("没有找到对应的答案,请确定是否存在对应文本"));
+            MsgAction.sendMsg(message, new MsgItem("没有文本"));
         }
     }
 

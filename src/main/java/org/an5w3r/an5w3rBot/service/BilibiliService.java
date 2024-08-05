@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BilibiliLiveMonitor {
+public class BilibiliService {
     private static final String API_URL = "https://api.live.bilibili.com/room/v1/Room/get_info?room_id=";
     private static final String STREAM_URL_API = "https://live.bilibili.com/";
 

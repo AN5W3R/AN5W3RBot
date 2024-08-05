@@ -48,7 +48,11 @@ public class MessageService {
         if (message.getRawMessage().contains(JSONUtil.getSettingMap().get("identifier"))) {
             processFunction(message);
         } else {
-            MsgAction.sendMsg(message, MsgItem.atItem(message.getSender().getUserId()), new MsgItem(TextDao.getAtTextByMsg(message)));
+            //这里添加猜角色游戏的答案判断
+            if (!ImageService.checkGuessCharacterAnswer(message)) {
+                MsgAction.sendMsg(message, MsgItem.atItem(message.getSender().getUserId()), new MsgItem(TextDao.getAtTextByMsg(message)));
+            }
+
         }
     }
     private static void handleNonAtMessage(Message message) throws IOException {//关键句式触发小黑屋功能
