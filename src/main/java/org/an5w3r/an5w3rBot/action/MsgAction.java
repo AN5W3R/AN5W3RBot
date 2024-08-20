@@ -35,7 +35,6 @@ public class MsgAction {
         } else {
             return;
         }
-        //这里要使用不同的方法来决定不同的发生内容
         params.put("message",itemList);
 
 

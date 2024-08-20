@@ -9,11 +9,10 @@
   "deepL_Key": "58ecba5b-929d-4812-89a1-02559a8ec616:fx",
 
   "proxyPort": "7890",
-  "google_ai_key": "",
+  "google_ai_key": "AIzaSyDYrLbKyF4AFmBnJfW2k5l9Q0Ww4OJAG3o",
   "googleModel": "D:\\QQBOT\\AN5W3RBot\\conf\\sakiko.json",
 
   "guessRatio": "2",
-  "guessChance": "1",
 
   "BiliBiliStreamRoom": "D:\\QQBOT\\AN5W3RBot\\conf\\BiliBiliStreamRoom.json"
 }
