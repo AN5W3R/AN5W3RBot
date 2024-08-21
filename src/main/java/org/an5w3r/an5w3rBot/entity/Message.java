@@ -47,7 +47,7 @@ public class Message implements Serializable {
         return msgStr;
     }
     public String atMsg(){
-        String replace = rawMessage.replace("[CQ:at,qq=" + selfId + "]", "");
+        String replace = rawMessage.replaceFirst("\\[.*?]", "");
         return replace;
     }
 }

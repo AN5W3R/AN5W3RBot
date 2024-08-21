@@ -39,8 +39,12 @@ public class ImageService {
         }
     }
     public static boolean checkGuessCharacterAnswer(Message message) throws IOException {
-        String[] correctAnswers = guessImage.get(message.getGroupId()).getTexts();
-        String file = guessImage.get(message.getGroupId()).getFile();
+        Image image = guessImage.get(message.getGroupId());
+        if (image==null) {
+            return false;
+        }
+        String[] correctAnswers = image.getTexts();
+        String file = image.getFile();
         if (correctAnswers==null){
             return false;
         }

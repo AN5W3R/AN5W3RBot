@@ -33,6 +33,7 @@ public class TextDao {
 
         return TextUtil.getGoogleText(message);
     }
+
     public static String getNotAtTextByMsg(String in) throws IOException {//无@关键词
         Map<String, String[]> TextJsonMap = JSONUtil.getNotAtTextMap();
         assert TextJsonMap != null;
@@ -48,6 +49,7 @@ public class TextDao {
         return null;
     }
     //翻译功能
+    //TODO 这个应该在service
     public static String getTranslation(Message message){
         String[] str = message.splitMsg();
         if (str.length == 1){
@@ -83,5 +85,7 @@ public class TextDao {
         }
         return TextUtil.getTranslation(text,sourceLang,targetLang);//#翻译 文本 源语言 目标语言
     }
+
+
 
 }

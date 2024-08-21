@@ -37,7 +37,7 @@ public class MessageService {
     private static void handleGroupMessage(Message message) throws IOException {
         logger.info("\n收到群" + message.getGroupId() + "-[" + message.getSender().getCard() + "]的消息：" + message.getRawMessage() + "\n");
 
-        if (message.getRawMessage().contains("[CQ:at,qq=" + message.getSelfId() + "]")) {
+        if (message.getRawMessage().contains("[CQ:at,qq=" + message.getSelfId()/* + "]"*/)) {
             handleAtMessage(message);
         } else {
             handleNonAtMessage(message);

@@ -101,7 +101,7 @@ public class ImageUtil {
             return "base64://" + Base64.getEncoder().encodeToString(imageBytes);
         }
     }
-
+    //图片插入文字
     public static String fortuneInsertText(Image fortuneImage, String[] fortuneText, org.an5w3r.an5w3rBot.entity.Font font) {
         try {
             // 读取图片

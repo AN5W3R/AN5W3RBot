@@ -36,11 +36,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-
+//TODO 这里的内容应该放在dao层
 public class TextUtil {
     private static final Logger logger = LoggerFactory.getLogger(TextUtil.class);
-    private static Map<String, List<Content>> contents = new HashMap<>();
 
+    //青云客api
     public static String getAiMsg(String sendMsg) {
         try {
             HttpGet httpGet = new HttpGet("http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + sendMsg);
@@ -57,6 +57,8 @@ public class TextUtil {
         }
     }
     //谷歌ai
+    //key为qq群号,map为和google模型的聊天记录
+    private static Map<String, List<Content>> contents = new HashMap<>();
     public static String getGoogleText(Message message){
         String sendMsg = message.atMsg();
         String id = message.getGroupId();
@@ -131,8 +133,9 @@ public class TextUtil {
             return "请求超时了";
         }
     }
+    // 将googleResponse的回复提取出来
     public static String googleAiResponseText(String jsonResponse) {
-        // 将googleResponse的Text提取出来
+
         JSONObject jsonObject = JSON.parseObject(jsonResponse);
         JSONArray candidates = jsonObject.getJSONArray("candidates");
         if (candidates != null && !candidates.isEmpty()) {
@@ -156,7 +159,6 @@ public class TextUtil {
     }
     //翻译
     public static String getTranslation(String text, String sourceLang, String targetLang){
-
         TextResult result = null;
         try {
             String authKey = JSONUtil.getSettingMap().get("deepL_Key");
