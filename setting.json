@@ -1,18 +1,22 @@
 {
-  "AtMessage": "D:\\QQBOT\\AN5W3RBot\\conf\\AtMessage.json",
-  "NotAtMessage": "D:\\QQBOT\\AN5W3RBot\\conf\\NotAtMessage.json",
-  "ImageSrcLib" : "D:\\QQBOT\\AN5W3RBot\\conf\\ImageSrc.json",
-  "fortuneSrc": "D:\\QQBOT\\AN5W3RBot\\fortune",
+  "AtMessage": "D:\\QQBOT\\AN5W3RBot\\AN5W3RBot\\conf\\jsonManage\\AtMessage.json",
+  "NotAtMessage": "D:\\QQBOT\\AN5W3RBot\\AN5W3RBot\\conf\\jsonManage\\NotAtMessage.json",
+  "ImageSrcLib" : "D:\\QQBOT\\AN5W3RBot\\AN5W3RBot\\conf\\jsonManage\\ImageSrc.json",
+  "googleModel": "D:\\QQBOT\\AN5W3RBot\\AN5W3RBot\\conf\\jsonManage\\sakiko.json",
+  "BiliBiliStreamRoom": "D:\\QQBOT\\AN5W3RBot\\AN5W3RBot\\conf\\jsonManage\\BiliBiliStreamRoom.json",
+
+  "guessRatio": "4",
+  "guessChance": "3",
+
+  "fortuneSrc": "D:\\QQBOT\\AN5W3RBot\\AN5W3RBot\\conf\\fortune",
+
   "port": "6700",
+  "proxyPort":"7890",
+
+
   "identifier": ".",
 
+
   "deepL_Key": "58ecba5b-929d-4812-89a1-02559a8ec616:fx",
-
-  "proxyPort": "7890",
-  "google_ai_key": "AIzaSyDYrLbKyF4AFmBnJfW2k5l9Q0Ww4OJAG3o",
-  "googleModel": "D:\\QQBOT\\AN5W3RBot\\conf\\sakiko.json",
-
-  "guessRatio": "2",
-
-  "BiliBiliStreamRoom": "D:\\QQBOT\\AN5W3RBot\\conf\\BiliBiliStreamRoom.json"
+  "google_ai_key": "AIzaSyDYrLbKyF4AFmBnJfW2k5l9Q0Ww4OJAG3o"
 }
