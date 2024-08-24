@@ -116,7 +116,7 @@
 
 #### 哔哩哔哩直播间监控功能
 
-在setting.json设置BiliBiliStreamRoom参数定位直播间配置信息
+在setting.json设置BiliBiliStreamRoom参数定位直播间配置信息文件
 
 如果有直播间开播或下播会在群聊中提醒
 
