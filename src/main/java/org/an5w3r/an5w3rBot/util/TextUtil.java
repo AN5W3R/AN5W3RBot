@@ -36,7 +36,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-//TODO 这里的内容应该放在dao层
 public class TextUtil {
     private static final Logger logger = LoggerFactory.getLogger(TextUtil.class);
 
@@ -159,6 +158,7 @@ public class TextUtil {
     }
     //翻译
     public static String getTranslation(String text, String sourceLang, String targetLang){
+        logger.info("正在获取翻译");
         TextResult result = null;
         try {
             String authKey = JSONUtil.getSettingMap().get("deepL_Key");

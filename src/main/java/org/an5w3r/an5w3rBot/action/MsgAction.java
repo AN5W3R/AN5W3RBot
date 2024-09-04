@@ -44,6 +44,7 @@ public class MsgAction {
 
 
         String strRequest = JSONObject.toJSONString(paramsRequest);//将请求转换为json
+        System.out.println(strRequest);
         Client.instance.session.getAsyncRemote().sendText(strRequest);//发出请求
     }
     //撤回消息
